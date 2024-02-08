@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const relicsController = require('../controllers/relicsController');
+const relicsController = require('../controllers/relicsController.js');
 
 // Updated route to get all non-vaulted relic names
 router.get('/', relicsController.getAllNonVaultedRelicNames);

@@ -43,7 +43,7 @@ const getNonVaultedRelicsSorted = async () => {
                 acc[key] = value; // Convert the sorted array back into an object
                 return acc;
             }, {});
-        console.log('Non-vaulted sorted relics:', nonVaultedSortedRelics)
+        // console.log('Non-vaulted sorted relics:', nonVaultedSortedRelics)
         return nonVaultedSortedRelics;
     } catch (error) {
         console.error('Error processing relic data:', error);
