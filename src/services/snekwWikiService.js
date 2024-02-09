@@ -39,6 +39,7 @@ const getNonVaultedRelicsSorted = async () => {
                     return a[0].localeCompare(b[0]); // Then alphabetically
                 }
             })
+        
             .reduce((acc, [key, value]) => {
                 acc[key] = value; // Convert the sorted array back into an object
                 return acc;

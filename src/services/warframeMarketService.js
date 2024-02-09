@@ -1,5 +1,3 @@
-// warframeMarketService.js
-
 const axios = require('axios');
 
 const fetchTopOrders = async (itemUrlName) => {
@@ -11,15 +9,14 @@ const fetchTopOrders = async (itemUrlName) => {
         'Platform': 'pc', // Make sure to use the correct platform if necessary
       }
     });
-    // Assuming the response structure matches the v2 API format
+    console.log(response.data); // Log the response data to see what's returned from the API
     return response.data.data;
   } catch (error) {
     console.error('Error response:', error.response);
-    console.error('Error status:', error.response.status);
-    console.error('Error data:', error.response.data);
+    console.error('Error status:', error.response && error.response.status);
+    console.error('Error data:', error.response && error.response.data);
     return null;
   }
-  
 };
 
 module.exports = {

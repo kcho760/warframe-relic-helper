@@ -10,50 +10,48 @@ const saveRelicDataToFirestore = async (relicData) => {
 };
 
 
-const getNonVaultedRelicInfo = async (req, res) => {
-    let { relicName } = req.params;
-    relicName = relicName.replace(/_/g, ' ');
-
+// Adjusted function to save all non-vaulted relics to Firestore using the relic name as the document ID
+const saveAllNonVaultedRelicsToFirestore = async () => {
+    const db = admin.firestore();
     try {
-        const relicData = await getNonVaultedRelicsSorted();
-        if (!relicData) {
-            return res.status(500).send('Failed to fetch data');
+        const allRelicData = await getNonVaultedRelicsSorted();
+        if (!allRelicData) {
+            console.error('Failed to fetch relic data');
+            return;
         }
 
-        const relicInfo = relicData[relicName];
-        if (!relicInfo) {
-            return res.status(404).send('Relic not found. It may be vaulted, not exist, or the name is incorrect.');
+        // Batch saving using the relic name as the document ID
+        for (const relicName in allRelicData) {
+            const relicData = allRelicData[relicName];
+            await db.collection('relics').doc(relicName.replace(/ /g, '_')).set(relicData);
+            console.log(`Saved ${relicName} data to Firestore`);
         }
 
-        // Save relic data to Firestore
-        await saveRelicDataToFirestore(relicInfo);
-
-        res.status(200).send('Relic data saved to Firestore'); // Send a success message
+        console.log('All non-vaulted relic data saved to Firestore');
     } catch (error) {
-        console.error('Error fetching relic info:', error);
-        res.status(500).send('Failed to fetch relic info');
+        console.error('Error saving all non-vaulted relics to Firestore:', error);
     }
 };
 
-const getAllNonVaultedRelicNames = async () => {
+// New function to retrieve individual relic data from Firestore
+const getRelicDataFromFirestore = async (req, res) => {
+    const { relicName } = req.params; // Expecting relic name in the URL with underscores
+    const db = admin.firestore();
+
     try {
-        const relicData = await getNonVaultedRelicsSorted();
-        if (!relicData) {
-            console.error('Failed to fetch data');
-            return [];
+        const doc = await db.collection('relics').doc(relicName).get();
+        if (!doc.exists) {
+            return res.status(404).send('Relic not found');
         }
-        
-        // Extract the names of all non-vaulted relics
-        const relicNames = Object.keys(relicData);
-        console.log('Non-vaulted relic names:', relicNames);
-        return relicNames;
+
+        res.status(200).json(doc.data());
     } catch (error) {
-        console.error('Error fetching relic data:', error);
-        return [];
+        console.error('Error retrieving relic data:', error);
+        res.status(500).send('Failed to retrieve relic data');
     }
 };
 
 module.exports = {
-    getNonVaultedRelicInfo,
-    getAllNonVaultedRelicNames
+    saveAllNonVaultedRelicsToFirestore,
+    getRelicDataFromFirestore
 };
