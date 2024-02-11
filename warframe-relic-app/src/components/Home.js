@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Home.css';
+import RelicList from './relics';
 
 function Home() {
   const [checkedItems, setCheckedItems] = useState({});
@@ -63,10 +64,8 @@ function Home() {
   return (
     <div className="Home">
       <div className="top-half">
-        {/* Placeholder cards */}
-        <div className="card">Card 1</div>
-        <div className="card">Card 2</div>
-        <div className="card">Card 3</div>
+        {/* Replace placeholder cards with RelicList component */}
+        <RelicList />
       </div>
 
       <div className="bottom-half">

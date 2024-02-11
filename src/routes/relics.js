@@ -3,7 +3,6 @@ const router = express.Router();
 const relicsController = require('../controllers/relicsController.js');
 
 // Route to trigger saving all non-vaulted relics to Firestore
-// Assuming you want to manually trigger this process via an API call
 router.post('/save-all-relics', async (req, res) => {
     try {
         await relicsController.saveAllNonVaultedRelicsToFirestore();
@@ -14,9 +13,18 @@ router.post('/save-all-relics', async (req, res) => {
     }
 });
 
+// Route to update TEV for all relics in Firestore
+router.post('/update-tev', async (req, res) => {
+    try {
+        await relicsController.updateTEVForAllRelics();
+        res.send('TEV updated for all relics.');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error updating TEV for relics');
+    }
+});
 
 // Route to get information for a specific non-vaulted relic by its name
-// Updated to use the new function for fetching individual relic data from Firestore
 router.get('/:relicName', relicsController.getRelicDataFromFirestore);
 
 module.exports = router;

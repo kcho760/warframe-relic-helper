@@ -51,7 +51,53 @@ const getRelicDataFromFirestore = async (req, res) => {
     }
 };
 
+// Function to calculate the TEV for a single relic
+const calculateTEV = (drops) => {
+    // Define the drop chances for an intact relic
+    const dropChances = {
+      "Common": 25.33 / 100,
+      "Uncommon": 11 / 100,
+      "Rare": 2 / 100
+    };
+  
+    // Calculate the TEV using the market data
+    const tev = drops.reduce((acc, drop) => {
+      const chance = dropChances[drop.Rarity];
+      const price = drop.MarketData?.platinumPrice || 0;
+      return acc + (chance * price);
+    }, 0);
+
+    // Round to two decimal places and convert back to number
+    return Number(tev.toFixed(2));
+};
+
+  
+  // Function to update the TEV for each relic in Firestore
+  const updateTEVForAllRelics = async () => {
+    const db = admin.firestore();
+    const relicsRef = db.collection('relics');
+  
+    try {
+      const snapshot = await relicsRef.get();
+      const batch = db.batch();
+  
+      snapshot.forEach(doc => {
+        const relicData = doc.data();
+        const tev = calculateTEV(relicData.Drops);
+        // Update the document with the TEV
+        batch.update(doc.ref, { TEV: tev });
+      });
+  
+      // Commit the batch update
+      await batch.commit();
+      console.log('TEV updated for all relics.');
+    } catch (error) {
+      console.error('Error updating TEV for relics:', error);
+    }
+  };
+  
 module.exports = {
     saveAllNonVaultedRelicsToFirestore,
-    getRelicDataFromFirestore
+    getRelicDataFromFirestore,
+    updateTEVForAllRelics
 };

@@ -15,28 +15,12 @@ const formatItemNameForUrl = (itemName, itemPart) => {
     return `${itemName.toLowerCase()}_${itemPart.toLowerCase()}`.replace(/ /g, '_');
 };
 
-// const updateDropWithMarketData = async (drop) => {
-//     if (drop.Item !== 'Forma') {
-//         const itemUrlName = formatItemNameForUrl(drop.Item, drop.Part);
-//         const marketData = await fetchTopOrders(itemUrlName);
-//         if (marketData && marketData.sell && marketData.sell.length > 0) {
-//             const prices = marketData.sell.map(order => order.platinum);
-//             return {
-//                 ...drop,
-//                 MarketData: {
-//                     topSellOrders: prices
-//                 }
-//             };
-//         }
-//     }
-//     return drop;
-// };
 const updateDropWithMarketData = async (drop) => {
     if (drop.Item !== 'Forma') {
         const itemUrlName = formatItemNameForUrl(drop.Item, drop.Part);
         const marketData = await fetchTopOrders(itemUrlName);
-        if (marketData && marketData.topSellOrders && marketData.topSellOrders.length > 0) {
-            const topSellerPlatinum = marketData.topSellOrders[0].platinum; // Get the platinum price from the top seller
+        if (marketData && marketData.sell && marketData.sell.length > 0) {
+            const topSellerPlatinum = marketData.sell[0].platinum; // Assuming the first order in the array has the platinum price
             return {
                 ...drop,
                 MarketData: {
@@ -58,28 +42,13 @@ const updateRelicWithMarketData = async (relic) => {
     return { ...relic, Drops: updatedDrops };
 };
 
-// // Main function to update all relics with market data
-// const updateAllRelicsWithMarketData = async () => {
-//     const db = admin.firestore();
-//     const allRelicData = await getNonVaultedRelicsSorted();
-
-//     for (const relicName in allRelicData) {
-//         const relic = allRelicData[relicName];
-//         const updatedRelic = await updateRelicWithMarketData(relic);
-
-//         // Save the updated relic document with market data
-//         await db.collection('relics').doc(relic.Name.replace(/ /g, '_')).set(updatedRelic);
-//         console.log(`Updated ${relic.Name} with market data.`);
-//     }
-
-//     console.log('All relics have been updated with market data.');
-// };
+// Function to update all relics with market data
 const updateAllRelicsWithMarketData = async () => {
     const db = admin.firestore();
     const allRelicData = await getNonVaultedRelicsSorted();
-    const relicNames = Object.keys(allRelicData).slice(0, 3); // Get only the first 3 relics for testing
+    // const relicNames = Object.keys(allRelicData).slice(0, 1); // Get only the first 3 relics for testing
 
-    for (const relicName of relicNames) {
+    for (const relicName in allRelicData) {
         const relic = allRelicData[relicName];
         const updatedRelic = await updateRelicWithMarketData(relic);
 
@@ -91,7 +60,7 @@ const updateAllRelicsWithMarketData = async () => {
         console.log(`Updated ${relic.Name} with market data.`);
     }
 
-    console.log('First 3 relics have been updated with market data.');
+    console.log('All relics have been updated with market data.');
 };
 
 
