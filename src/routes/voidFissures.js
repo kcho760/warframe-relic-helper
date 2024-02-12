@@ -5,6 +5,7 @@ const { fetchActiveVoidFissures } = require('../services/voidFissuresService');
 router.get('/active-fissures', async (req, res) => {
   try {
     const fissures = await fetchActiveVoidFissures();
+    console.log('Fetched active fissures:', fissures);
     res.json(fissures);
   } catch (error) {
     res.status(500).send('Failed to fetch active fissures');

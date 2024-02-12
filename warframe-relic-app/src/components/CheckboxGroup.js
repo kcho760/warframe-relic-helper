@@ -1,44 +1,68 @@
 import React from 'react';
 
-// CheckboxGroup component handles rendering of checkboxes and a "Select All" option
 const CheckboxGroup = ({ groupName, items, checkedItems, setCheckedItems }) => {
+  // Determine if the group is handling boolean values or arrays based on groupName
+  const isBooleanGroup = groupName === 'specialFissure';
+
   // Handle individual checkbox change
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
-    setCheckedItems({ ...checkedItems, [name]: checked });
+
+    if (!isBooleanGroup) {
+      // Handling arrays for missionType and tier
+      const updatedItems = checked 
+        ? [...(checkedItems[groupName] || []), name] 
+        : (checkedItems[groupName] || []).filter(item => item !== name);
+      setCheckedItems({ ...checkedItems, [groupName]: updatedItems });
+    } else {
+      // Handling boolean values for isHard and isStorm
+      setCheckedItems({ ...checkedItems, [name]: checked });
+    }
   };
 
-  // Check if all checkboxes are checked
-  const isAllChecked = items.every(item => checkedItems[item.name]);
+  // Compute if all checkboxes are checked
+  const isAllChecked = isBooleanGroup
+    ? items.every(item => checkedItems[item.name]) // For boolean groups, check if all related items are true
+    : items.every(item => checkedItems[groupName]?.includes(item.name)); // For array groups, check if all items are included
 
   // Handle "Select All" checkbox change
   const handleSelectAllChange = (event) => {
     const { checked } = event.target;
-    const allOrNone = items.reduce((acc, item) => ({
-      ...acc,
-      [item.name]: checked,
-    }), {});
-    setCheckedItems({ ...checkedItems, ...allOrNone });
+
+    const allOrNone = isBooleanGroup
+      ? items.reduce((acc, item) => ({ ...acc, [item.name]: checked }), {})
+      : checked 
+        ? items.map(item => item.name) 
+        : [];
+
+    setCheckedItems({ ...checkedItems, ...(isBooleanGroup ? allOrNone : { [groupName]: allOrNone }) });
+  };
+
+  // Adjust rendering logic for checkboxes based on category
+  const isChecked = (name) => {
+    return isBooleanGroup ? !!checkedItems[name] : checkedItems[groupName]?.includes(name) || false;
   };
 
   return (
     <div className={`${groupName}-group`}>
-      <label>
-        <input
-          type="checkbox"
-          name={`all-${groupName}`}
-          checked={isAllChecked}
-          onChange={handleSelectAllChange}
-        />
-        All {groupName.charAt(0).toUpperCase() + groupName.slice(1)}
-      </label>
+      {!isBooleanGroup && (
+        <label>
+          <input
+            type="checkbox"
+            name={`all-${groupName}`}
+            checked={isAllChecked}
+            onChange={handleSelectAllChange}
+          />
+          All {groupName.charAt(0).toUpperCase() + groupName.slice(1)}
+        </label>
+      )}
       <div className={`${groupName}-types`}>
         {items.map(item => (
           <label key={item.name}>
             <input
               type="checkbox"
               name={item.name}
-              checked={checkedItems[item.name] || false}
+              checked={isChecked(item.name)}
               onChange={handleCheckboxChange}
             />
             {item.label}

@@ -4,36 +4,41 @@ import RelicList from './RelicList';
 import CheckboxGroup from './CheckboxGroup';
 
 function Home() {
-  const [checkedItems, setCheckedItems] = useState({});
+  const [checkedItems, setCheckedItems] = useState({
+    missionType: [],
+    tier: [],
+    isHard: false,
+    isStorm: false,
+  });
 
-  const normalMissionTypes = [
-    { name: 'exterminate', label: 'Exterminate' },
-    { name: 'capture', label: 'Capture' },
-    { name: 'hijack', label: 'Hijack' },
-    { name: 'mobileDefense', label: 'Mobile Defense' },
-    { name: 'rescue', label: 'Rescue' },
-    { name: 'sabotage', label: 'Sabotage' },
-    { name: 'hive', label: 'Hive' },
-    { name: 'spy', label: 'Spy' },
+  const missionTypes = [
+    { name: 'Extermination', label: 'Extermination' },
+    { name: 'Capture', label: 'Capture' },
+    { name: 'Hijack', label: 'Hijack' },
+    { name: 'Mobile Defense', label: 'Mobile Defense' },
+    { name: 'Rescue', label: 'Rescue' },
+    { name: 'Sabotage', label: 'Sabotage' },
+    { name: 'Hive', label: 'Hive' },
+    { name: 'Spy', label: 'Spy' },
   ];
 
   const endlessMissionTypes = [
-    { name: 'defense', label: 'Defense' },
-    { name: 'excavation', label: 'Excavation' },
-    { name: 'interception', label: 'Interception' },
-    { name: 'survival', label: 'Survival' },
+    { name: 'Defense', label: 'Defense' },
+    { name: 'Excavation', label: 'Excavation' },
+    { name: 'Interception', label: 'Interception' },
+    { name: 'Survival', label: 'Survival' },
   ];
 
   const specialFissureTypes = [
-    { name: 'steel-path', label: 'Steel Path' },
-    { name: 'void-storm', label: 'Void Storm' },
+    { name: 'isHard', label: 'Steel Path' },
+    { name: 'isStorm', label: 'Void Storm' },
   ];
 
   const relicTypes = [
-    { name: 'lith', label: 'Lith' },
-    { name: 'meso', label: 'Meso' },
-    { name: 'neo', label: 'Neo' },
-    { name: 'axi', label: 'Axi' },
+    { name: 'Lith', label: 'Lith' },
+    { name: 'Meso', label: 'Meso' },
+    { name: 'Neo', label: 'Neo' },
+    { name: 'Axi', label: 'Axi' },
   ];
 
   return (
@@ -43,25 +48,25 @@ function Home() {
       </div>
       <div className="bottom-half">
         <CheckboxGroup
-          groupName="normal-mission"
-          items={normalMissionTypes}
+          groupName="missionType"
+          items={missionTypes}
           checkedItems={checkedItems}
           setCheckedItems={setCheckedItems}
         />
         <CheckboxGroup
-          groupName="endless-mission"
+          groupName="endlessMission"
           items={endlessMissionTypes}
           checkedItems={checkedItems}
           setCheckedItems={setCheckedItems}
         />
         <CheckboxGroup
-          groupName="special-fissures"
+          groupName="specialFissure"
           items={specialFissureTypes}
           checkedItems={checkedItems}
           setCheckedItems={setCheckedItems}
         />
         <CheckboxGroup
-          groupName="relics"
+          groupName="tier"
           items={relicTypes}
           checkedItems={checkedItems}
           setCheckedItems={setCheckedItems}
