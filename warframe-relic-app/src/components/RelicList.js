@@ -17,10 +17,13 @@ const RelicList = ({ filters }) => {
           id: doc.id, 
           ...doc.data()
         }));
-
+  
         // Apply filters to the relics data
         relicsData = applyFilters(relicsData, filters, activeFissures);
-
+  
+        // Sort relics by TEV from highest to lowest
+        relicsData.sort((a, b) => b.TEV - a.TEV);
+  
         setRelics(relicsData);
       } catch (err) {
         console.error(err);
@@ -29,10 +32,10 @@ const RelicList = ({ filters }) => {
         setLoading(false);
       }
     };
-
+  
     fetchRelics();
   }, [filters, activeFissures]); // Re-fetch relics when filters or activeFissures change
-
+  
   useEffect(() => {
     const fetchActiveFissures = async () => {
       try {
@@ -83,7 +86,7 @@ const RelicList = ({ filters }) => {
   if (relics.length === 0) {
     return (
       <div>
-        <p>No relics found</p>
+        <p>No combination found</p>
         <p>Selected filters: {JSON.stringify(filters)}</p>
         <p>Active fissures: {JSON.stringify(activeFissures.map(fissure => ({
           missionType: fissure.missionType,

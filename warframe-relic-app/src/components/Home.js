@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Home.css';
 import RelicList from './RelicList';
 import CheckboxGroup from './CheckboxGroup';
+import ActiveFissures from './ActiveFissures';
 
 function Home() {
   const [checkedItems, setCheckedItems] = useState({
@@ -72,6 +73,7 @@ function Home() {
           setCheckedItems={setCheckedItems}
         />
       </div>
+        <ActiveFissures filters={checkedItems}/>
     </div>
   );
 }
