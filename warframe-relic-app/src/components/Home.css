@@ -5,50 +5,88 @@
 .top-half, .bottom-half {
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
 
 .top-half {
-  height: 30vh;
-  background-color: #f0f0f0; /* Light grey background */
+  height: 50vh;
+  background-color: #f0f0f0;
+  overflow: auto;
 }
 
 .bottom-half {
-  display: flex; /* Use flexbox for layout */
-  flex-direction: column; /* Stack children vertically */
-  justify-content: space-around; /* Spread sections evenly */
-  align-items: center; /* Center-align items horizontally */
-  height: auto; /* Adjust height based on content */
+  flex-grow: 1;
   background-color: #e0e0e0;
+  padding: 20px 0;
 }
 
 .card {
   width: 100px;
   height: 100px;
-  background-color: #ffffff; /* White background */
-  border: 1px solid #000; /* Black border */
+  background-color: #ffffff;
+  border: 1px solid #000;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 10px;
 }
 
-  /* Style for each section */
-.normal-mission-types, .endless-mission-types, .relic-types, .special-fissure-types {
-  width: auto; /* Adjust width as needed */
+.group {
+  width: 90%;
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Create a 2-column grid */
-  gap: 10px; /* Space between items */
-  margin: 10px 0; /* Margin for top and bottom */
-}
-
-.card, .normal-mission-types, .endless-mission-types,.special-fissure-types, .relic-types {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Optional: add shadow for better visuals */
-  transition: 0.3s; /* Optional: add transition for hover effects */
-  border-radius: 5px; /* Optional: round corners for aesthetics */
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 5px;
+  margin-bottom: 20px;
 }
 
 .checkbox-label {
-  margin: 5px 0;
+  margin: 5px;
   cursor: pointer;
+  display: block;
+  text-align: left;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.card:hover, .group:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.carousel-container {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #e0e0e0;
+  width: 100%;
+  height: 50%;
+}
+
+.carousel-item {
+  flex: 0 0 auto;
+  width: 200px;
+  margin: 10px;
+  text-align: center;
+}
+
+.carousel-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.carousel-container::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+.carousel-container::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.carousel-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
