@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './Home.css';
-import RelicList from './relics';
+import RelicList from './RelicList';
 import CheckboxGroup from './CheckboxGroup';
+
 function Home() {
   const [checkedItems, setCheckedItems] = useState({});
 
@@ -38,7 +39,7 @@ function Home() {
   return (
     <div className="Home">
       <div className="top-half">
-        <RelicList />
+        <RelicList filters={checkedItems} />
       </div>
       <div className="bottom-half">
         <CheckboxGroup

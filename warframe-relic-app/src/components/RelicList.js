@@ -9,7 +9,7 @@ const Relic = ({ relic }) => (
   </div>
 );
 
-const RelicList = () => {
+const RelicList = ({ filters }) => {
     const [relics, setRelics] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -23,8 +23,8 @@ const RelicList = () => {
             ...doc.data()
           }));
 
-          // Sort relics by TEV from highest to lowest
-          relicsData = relicsData.sort((a, b) => b.TEV - a.TEV);
+          // Apply filters
+          relicsData = applyFilters(relicsData, filters);
 
           setRelics(relicsData);
         } catch (err) {
@@ -36,7 +36,18 @@ const RelicList = () => {
       };
   
       fetchRelics();
-    }, []);
+    }, [filters]); // Re-fetch relics when filters change
+  
+    const applyFilters = (relicsData, filters) => {
+      // Filter relics based on selected relic types
+      const filteredRelics = relicsData.filter(relic => filters[relic.Tier.toLowerCase()]); // Convert to lowercase to match filter options
+      
+      // Sort the filtered relics by TEV value
+      filteredRelics.sort((a, b) => b.TEV - a.TEV); // Sort in descending order by TEV value
+      
+      return filteredRelics;
+    };
+    
   
     if (loading) {
       return <p>Loading relics...</p>;
@@ -44,6 +55,10 @@ const RelicList = () => {
   
     if (error) {
       return <p>{error}</p>;
+    }
+  
+    if (relics.length === 0) {
+      return <p>No relics/fissures match filters.</p>;
     }
   
     return (
