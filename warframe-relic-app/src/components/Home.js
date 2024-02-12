@@ -32,7 +32,7 @@ function Home() {
 
   const specialFissureTypes = [
     { name: 'isHard', label: 'Steel Path' },
-    { name: 'isStorm', label: 'Void Storm' },
+    // { name: 'isStorm', label: 'Void Storm' },
   ];
 
   const relicTypes = [

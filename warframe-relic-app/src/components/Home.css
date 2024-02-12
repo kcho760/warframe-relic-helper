@@ -59,28 +59,20 @@ input[type="checkbox"] {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.carousel-item {
+.relic-item {
   flex: 0 0 auto;
   width: 200px;
   margin: 10px;
   text-align: center;
-}
-
-/* Add to Home.css */
-.fissure-card {
-  flex: 0 0 auto; /* Do not grow or shrink */
-  width: 200px; /* Adjust based on your content */
-  height: auto;
-  margin: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #fff; /* Adjust color as needed */
-  border: 1px solid #ddd; /* Adjust border as needed */
+  background-color: #fff;
+  border: 1px solid #ddd;
   padding: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow for depth */
-  border-radius: 5px; /* Optional: rounded corners */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 5px;
 }
 
 .carousel-container {
