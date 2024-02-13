@@ -59,7 +59,7 @@ const RelicList = ({ filters }) => {
   
     // Adjusted filter logic
     return relicsData.filter(relic => {
-      // If no tiers are selected, do not filter out based on tier
+      // If no tiers are selected, do not filter out based on tier (i.e., select all)
       const tierCondition = filters.tier.length === 0 || filters.tier.includes(relic.Tier);
   
       // Filtering based on active fissures and mission types
@@ -67,13 +67,12 @@ const RelicList = ({ filters }) => {
         (combinedMissionTypes.length === 0 || combinedMissionTypes.includes(fissure.missionType)) &&
         (filters.tier.length === 0 || filters.tier.includes(fissure.tier)) &&
         (filters.isStorm === undefined || fissure.isStorm === filters.isStorm) &&
-        (filters.isHard === undefined || fissure.isHard === filters.isHard)
+        (filters.steelPath === 'both' || fissure.isHard === (filters.steelPath === 'true'))
       );
   
       return tierCondition && fissureCondition;
     });
-  };
-  
+  };  
 
   if (loading) {
     return <p>Loading relics...</p>;

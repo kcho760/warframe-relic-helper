@@ -4,6 +4,7 @@ const Bottleneck = require('bottleneck');
 const admin = require('firebase-admin');
 const { fetchTopOrders } = require('../services/warframeMarketService');
 const { getNonVaultedRelicsSorted } = require('../services/snekwWikiService');
+const Items = require('warframe-items')
 
 // Initialize a new Bottleneck limiter
 const limiter = new Bottleneck({
@@ -89,7 +90,14 @@ const getItemMarketData = async (req, res) => {
     }
 };
 
+const itemInfoTester = async() => {
+    const primaries = new Items({ category: ['Relics'] });
+    console.log(primaries[0].rewards);
+}
+
+
 module.exports = {
+    itemInfoTester,
     getItemMarketData,
     updateAllRelicsWithMarketData // Export the new function for use in other parts of the application
 };

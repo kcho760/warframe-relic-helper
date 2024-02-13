@@ -18,4 +18,6 @@ router.post('/update-relics-market-data', async (req, res) => {
     }
 });
 
+router.get('/item-info-tester', itemsController.itemInfoTester);
+
 module.exports = router;

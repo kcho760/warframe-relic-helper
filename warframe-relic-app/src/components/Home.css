@@ -59,7 +59,7 @@ input[type="checkbox"] {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.relic-item {
+.relic-item, .fissure-card {
   flex: 0 0 auto;
   width: 200px;
   margin: 10px;

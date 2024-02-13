@@ -16,7 +16,7 @@ const ActiveFissures = ({ filters }) => {
         fissures = fissures.filter(fissure => {
           const missionTypeMatch = !filters.missionType.length || filters.missionType.includes(fissure.missionType);
           const tierMatch = !filters.tier.length || filters.tier.includes(fissure.tier);
-          const isHardMatch = filters.isHard === undefined || fissure.isHard === filters.isHard;
+          const isHardMatch = filters.steelPath === 'both' || fissure.isHard === (filters.steelPath === 'true');
           const isStormMatch = filters.isStorm === undefined || fissure.isStorm === filters.isStorm;
           
           return missionTypeMatch && tierMatch && isHardMatch && isStormMatch;
@@ -40,16 +40,20 @@ const ActiveFissures = ({ filters }) => {
     <div>
       <h2>Active Void Fissures</h2>
       <div className="carousel-container">
-        {activeFissures.map(fissure => (
-          <div className="fissure-card" key={fissure.id}>
-            <p>Node: {fissure.node}</p>
-            <p>Mission Type: {fissure.missionType}</p>
-            <p>Enemy: {fissure.enemy}</p>
-            <p>Tier: {fissure.tier}</p>
-            <p>ETA: {fissure.eta}</p>
-            <p>Steel Path?: {fissure.isHard ? 'Yes' : 'No'}</p>
-          </div>
-        ))}
+        {activeFissures.length > 0 ? (
+          activeFissures.map(fissure => (
+            <div className="fissure-card" key={fissure.id}>
+              <p>Node: {fissure.node}</p>
+              <p>Mission Type: {fissure.missionType}</p>
+              <p>Enemy: {fissure.enemy}</p>
+              <p>Tier: {fissure.tier}</p>
+              <p>ETA: {fissure.eta}</p>
+              <p>Steel Path?: {fissure.isHard ? 'Yes' : 'No'}</p>
+            </div>
+          ))
+        ) : (
+          <p>No active fissures match the selected filters.</p>
+        )}
       </div>
     </div>
   );
