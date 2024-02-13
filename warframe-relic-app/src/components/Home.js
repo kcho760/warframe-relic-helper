@@ -8,10 +8,12 @@ function Home() {
   const [allTiersSelected, setAllTiersSelected] = useState(true);
   const [checkedItems, setCheckedItems] = useState({
     missionType: [],
+    endlessMission: [], // Ensure this is initialized as an empty array
     tier: [],
     steelPath: 'both', // Possible values: 'true', 'false', 'both'
     isStorm: false,
   });
+  
   
 
   const missionTypes = [
@@ -30,6 +32,7 @@ function Home() {
     { name: 'Excavation', label: 'Excavation' },
     { name: 'Interception', label: 'Interception' },
     { name: 'Survival', label: 'Survival' },
+    { name: 'Disruption', label: 'Disruption'}
   ];
 
   // const specialFissureTypes = [
@@ -63,25 +66,53 @@ function Home() {
       return { ...prev, tier: newTiers };
     });
   };
+
+  const handleCheckboxChange = (event, groupName) => {
+    const { name, checked } = event.target;
+
+    // Handle arrays for missionType, endlessMission, and tier
+    if (groupName !== 'specialFissure') {
+      // For arrays (missionType, tier)
+      const updatedItems = checked 
+        ? [...(checkedItems[groupName] || []), name] 
+        : (checkedItems[groupName] || []).filter(item => item !== name);
+      setCheckedItems({ ...checkedItems, [groupName]: updatedItems });
+    } else {
+      // For boolean values (isHard, isStorm)
+      setCheckedItems({ ...checkedItems, [name]: checked });
+    }
+  };
   
+  const combinedMissionTypes = [
+    ...checkedItems.missionType,
+    ...checkedItems.endlessMission,
+  ].filter(Boolean); // This removes any falsy values like empty strings
+
+  // Update the filters object to include the combined mission types
+  const combinedFilters = {
+    ...checkedItems,
+    missionType: combinedMissionTypes, // This now includes both regular and endless mission types
+  };
 
   return (
     <div className="Home">
       <div className="top-half">
-        <RelicList filters={checkedItems} />
+        <RelicList filters={combinedFilters} />
       </div>
       <div className="bottom-half">
         <CheckboxGroup
-          groupName="Mission Type"
+          groupName="missionType" // Use the key from the state here
           items={missionTypes}
           checkedItems={checkedItems}
           setCheckedItems={setCheckedItems}
+          handleCheckboxChange={handleCheckboxChange} // Pass the function here
         />
         <CheckboxGroup
-          groupName="Endless Mission"
+          groupName="endlessMission"
           items={endlessMissionTypes}
           checkedItems={checkedItems}
           setCheckedItems={setCheckedItems}
+          handleCheckboxChange={(event) => handleCheckboxChange(event, 'endlessMission')}
         />
         <div>
           <label>
@@ -144,7 +175,7 @@ function Home() {
           ))}
         </div>
       </div>
-        <ActiveFissures filters={checkedItems}/>
+        <ActiveFissures filters={combinedFilters}/>
     </div>
   );
 }

@@ -9,7 +9,7 @@ const CheckboxGroup = ({ groupName, items, checkedItems, setCheckedItems }) => {
     const { name, checked } = event.target;
 
     if (!isBooleanGroup) {
-      // Handling arrays for missionType and tier
+      // Handling arrays for missionType, endlessMission, and tier
       const updatedItems = checked 
         ? [...(checkedItems[groupName] || []), name] 
         : (checkedItems[groupName] || []).filter(item => item !== name);
@@ -21,26 +21,18 @@ const CheckboxGroup = ({ groupName, items, checkedItems, setCheckedItems }) => {
   };
 
   // Compute if all checkboxes are checked
-  const isAllChecked = isBooleanGroup
-    ? items.every(item => checkedItems[item.name]) // For boolean groups, check if all related items are true
-    : items.every(item => checkedItems[groupName]?.includes(item.name)); // For array groups, check if all items are included
+  const isAllChecked = items.length > 0 && items.every(item => checkedItems[groupName]?.includes(item.name));
 
   // Handle "Select All" checkbox change
   const handleSelectAllChange = (event) => {
     const { checked } = event.target;
-
-    const allOrNone = isBooleanGroup
-      ? items.reduce((acc, item) => ({ ...acc, [item.name]: checked }), {})
-      : checked 
-        ? items.map(item => item.name) 
-        : [];
-
-    setCheckedItems({ ...checkedItems, ...(isBooleanGroup ? allOrNone : { [groupName]: allOrNone }) });
+    const allOrNone = checked ? items.map(item => item.name) : [];
+    setCheckedItems({ ...checkedItems, [groupName]: allOrNone });
   };
 
   // Adjust rendering logic for checkboxes based on category
   const isChecked = (name) => {
-    return isBooleanGroup ? !!checkedItems[name] : checkedItems[groupName]?.includes(name) || false;
+    return checkedItems[groupName]?.includes(name) || false;
   };
 
   return (

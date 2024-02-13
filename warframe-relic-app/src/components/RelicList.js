@@ -32,7 +32,9 @@ const RelicList = ({ filters }) => {
         setLoading(false);
       }
     };
-  
+    
+    console.log('Filters:', filters); // Log the filters variable
+    
     fetchRelics();
   }, [filters, activeFissures]); // Re-fetch relics when filters or activeFissures change
   
@@ -51,29 +53,30 @@ const RelicList = ({ filters }) => {
   }, []); // Fetch active fissures only once when the component mounts
 
   const applyFilters = (relicsData, filters, activeFissures) => {
-    // Ensure missionType and endlessMission are arrays before combining them
-    const combinedMissionTypes = [
-      ...(Array.isArray(filters.missionType) ? filters.missionType : []),
-      ...(Array.isArray(filters.endlessMission) ? filters.endlessMission : [])
-    ];
+    // Combine missionType and endlessMission arrays for filtering.
+    const missionTypes = [...filters.missionType, ...filters.endlessMission];
   
-    // Adjusted filter logic
-    return relicsData.filter(relic => {
-      // If no tiers are selected, do not filter out based on tier (i.e., select all)
-      const tierCondition = filters.tier.length === 0 || filters.tier.includes(relic.Tier);
+    // Filter active fissures based on the selected mission types, tiers, and steel path.
+    const matchingFissures = activeFissures.filter(fissure =>
+      (missionTypes.length === 0 || missionTypes.includes(fissure.missionType)) &&
+      (filters.tier.length === 0 || filters.tier.includes(fissure.tier)) &&
+      (filters.steelPath === 'both' || fissure.isHard.toString() === filters.steelPath)
+    );
   
-      // Filtering based on active fissures and mission types
-      const fissureCondition = activeFissures.some(fissure =>
-        (combinedMissionTypes.length === 0 || combinedMissionTypes.includes(fissure.missionType)) &&
-        (filters.tier.length === 0 || filters.tier.includes(fissure.tier)) &&
-        (filters.isStorm === undefined || fissure.isStorm === filters.isStorm) &&
-        (filters.steelPath === 'both' || fissure.isHard === (filters.steelPath === 'true'))
-      );
+    // If there are no matching active fissures, then no relics should be displayed.
+    if (matchingFissures.length === 0) {
+      return [];
+    }
   
-      return tierCondition && fissureCondition;
-    });
-  };  
-
+    // Otherwise, filter relics based on the tiers present in the matching active fissures.
+    const matchingTiers = new Set(matchingFissures.map(fissure => fissure.tier));
+  
+    return relicsData.filter(relic =>
+      matchingTiers.has(relic.Tier) // Tier match
+    );
+  };
+  
+  
   if (loading) {
     return <p>Loading relics...</p>;
   }
@@ -86,13 +89,6 @@ const RelicList = ({ filters }) => {
     return (
       <div>
         <p>No combination found</p>
-        <p>Selected filters: {JSON.stringify(filters)}</p>
-        <p>Active fissures: {JSON.stringify(activeFissures.map(fissure => ({
-          missionType: fissure.missionType,
-          tier: fissure.tier,
-          isHard: fissure.isHard,
-          isStorm: fissure.isStorm
-        })))}</p>
       </div>
     );
   }
