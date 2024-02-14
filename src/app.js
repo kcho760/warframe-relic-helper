@@ -15,8 +15,13 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://console.firebase.google.com/u/0/project/warframe-relic-app/firestore/data/~2F'
 });
+const corsOptions = {
+  origin: 'https://warframe-relic-app.web.app', // Your production domain
+  optionsSuccessStatus: 200
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
+
 app.use(express.json()); // for parsing application/json
 
 cron.schedule('0 * * * *', async () => {
