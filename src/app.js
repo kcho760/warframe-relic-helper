@@ -15,18 +15,14 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://console.firebase.google.com/u/0/project/warframe-relic-app/firestore/data/~2F'
 });
-const corsOptions = {
-  origin: 'https://warframe-relic-app.web.app', // Your production domain
-  optionsSuccessStatus: 200
-};
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json()); // for parsing application/json
 
 cron.schedule('0 * * * *', async () => {
   try {
-    const response = await axios.post('https://warframe-relic-app.web.app/api/items/update-relics-market-data');
+    const response = await axios.post('http://localhost:5000/api/items/update-relics-market-data');
     console.log('Relics market data update response:', response.data);
   } catch (error) {
     console.error('Error updating relics market data:', error);
@@ -35,7 +31,7 @@ cron.schedule('0 * * * *', async () => {
 
 cron.schedule('0 * * * *', async () => {
   try {
-    const response = await axios.post('https://warframe-relic-app.web.app/api/relics/update-tev');
+    const response = await axios.post('https://localhost:5000/api/relics/update-tev');
     console.log('TEV update response:', response.data);
   } catch (error) {
     console.error('Error updating TEV:', error);
