@@ -19,6 +19,7 @@
     "express": "^4.18.2",
     "firebase": "^10.8.0",
     "firebase-admin": "^12.0.0",
+    "node-cron": "^3.0.3",
     "warframe-items": "^1.1261.22"
   }
 }

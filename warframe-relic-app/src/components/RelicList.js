@@ -39,15 +39,22 @@ const RelicList = ({ filters }) => {
     const fetchActiveFissures = async () => {
       try {
         const response = await axios.get('https://warframe-relic-app.web.app/api/void-fissures/active-fissures');
-        setActiveFissures(response.data);
+        // Check if response.data is an array before setting the state
+        if (Array.isArray(response.data)) {
+          setActiveFissures(response.data);
+        } else {
+          console.error('Expected an array, but received:', response.data);
+          setError('Data format error: Active fissures data is not an array.');
+        }
       } catch (error) {
         console.error('Failed to fetch active fissures:', error);
         setError('Failed to fetch active fissures');
       }
     };
-
+  
     fetchActiveFissures();
   }, []);
+  
 
   const applyFilters = (relicsData, filters, activeFissures) => {
     const missionTypes = [...filters.missionType, ...filters.endlessMission];
