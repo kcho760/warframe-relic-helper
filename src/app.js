@@ -10,11 +10,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Initialize Firebase Admin SDK with appropriate credentials
-const serviceAccount = require('../warframe-relic-app-firebase-adminsdk-jhq8n-9149d732c0.json');
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://console.firebase.google.com/u/0/project/warframe-relic-app/firestore/data/~2F'
-});
+// const serviceAccount = require('../warframe-relic-app-firebase-adminsdk-jhq8n-9149d732c0.json');
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL: 'https://console.firebase.google.com/u/0/project/warframe-relic-app/firestore/data/~2F'
+// });
 
 app.use(cors());
 
