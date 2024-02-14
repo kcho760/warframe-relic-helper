@@ -38,7 +38,7 @@ const RelicList = ({ filters }) => {
   useEffect(() => {
     const fetchActiveFissures = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/void-fissures/active-fissures');
+        const response = await axios.get('https://warframe-relic-app.web.app/api/void-fissures/active-fissures');
         setActiveFissures(response.data);
       } catch (error) {
         console.error('Failed to fetch active fissures:', error);

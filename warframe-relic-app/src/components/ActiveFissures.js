@@ -9,7 +9,7 @@ const ActiveFissures = ({ filters }) => {
   useEffect(() => {
     const fetchActiveFissures = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/void-fissures/active-fissures');
+        const response = await axios.get('https://warframe-relic-app.web.app/api/void-fissures/active-fissures');
         let fissures = response.data;
 
         // Filter the fissures based on the filters passed in
