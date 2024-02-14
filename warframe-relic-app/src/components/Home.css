@@ -59,33 +59,107 @@ input[type="checkbox"] {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.relic-item, .fissure-card {
+.relic-item {
+  perspective: 1000px;
   flex: 0 0 auto;
-  width: 200px;
+  width: 300px;
+  height: 300px; /* Adjust based on your content */
   margin: 10px;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
   border-radius: 5px;
 }
+
+.fissure-card {
+  perspective: 1000px;
+  flex: 0 0 auto;
+  width: 200px;
+  height: 300px; /* Adjust based on your content */
+  margin: 10px;
+  text-align: center;
+  position: relative;
+  border-radius: 5px;
+  border: #000 1px solid;
+}
+
+.relic-item-flipper {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.relic-item.flipped .relic-item-flipper {
+  transform: rotateY(180deg);
+}
+
+.relic-item-front, .relic-item-back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.relic-item-back {
+  transform: rotateY(180deg);
+  flex-direction: column; /* Stack children vertically */
+  justify-content: flex-start; /* Align content to the top */
+  text-align: left; /* Align text to the left */
+}
+
+.relic-item-drop {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.relic-item-drop-name, .relic-item-drop-platinum {
+  margin: 5px;
+}
+
+.relic-item-back-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+/* Add this to ensure content doesn't overflow the card */
+.relic-item-drop-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.relic-item-drop-platinum {
+  flex-shrink: 0; /* Prevents the platinum price from shrinking */
+  margin-left: 10px; /* Adds some space between the name and price */
+}
+
 
 .carousel-container {
   display: flex;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: #888 #e0e0e0; /* For Firefox */
-  padding: 20px 0; /* Space above/below the carousel */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #e0e0e0;
+  padding: 20px 0;
   width: 100%;
 }
 
-/* Optional: Custom scrollbar for Chrome, Edge, and Safari */
 .carousel-container::-webkit-scrollbar {
   height: 8px;
 }

@@ -4,6 +4,7 @@ const admin = require('firebase-admin'); // Import Firebase Admin SDK
 const relicRoutes = require('./routes/relics');
 const itemsRoutes = require('./routes/items');
 const voidFissureRoutes = require('./routes/voidFissures');
+const cron = require('node-cron');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,6 +18,24 @@ admin.initializeApp({
 
 app.use(cors());
 app.use(express.json()); // for parsing application/json
+
+cron.schedule('0 * * * *', async () => {
+  try {
+    const response = await axios.post('https://warframe-relic-app.web.app/api/items/update-relics-market-data');
+    console.log('Relics market data update response:', response.data);
+  } catch (error) {
+    console.error('Error updating relics market data:', error);
+  }
+});
+
+cron.schedule('0 * * * *', async () => {
+  try {
+    const response = await axios.post('https://warframe-relic-app.web.app/api/relics/update-tev');
+    console.log('TEV update response:', response.data);
+  } catch (error) {
+    console.error('Error updating TEV:', error);
+  }
+});
 
 // Serve your routes
 app.use('/api/relics', relicRoutes);
