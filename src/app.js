@@ -22,7 +22,7 @@ app.use(express.json()); // for parsing application/json
 
 cron.schedule('0 * * * *', async () => {
   try {
-    const response = await axios.post('http://localhost:5000/api/items/update-relics-market-data');
+    const response = await axios.post('https://warframe-relic-app.onrender.com/api/items/update-relics-market-data');
     console.log('Relics market data update response:', response.data);
   } catch (error) {
     console.error('Error updating relics market data:', error);
@@ -31,7 +31,7 @@ cron.schedule('0 * * * *', async () => {
 
 cron.schedule('0 * * * *', async () => {
   try {
-    const response = await axios.post('https://localhost:5000/api/relics/update-tev');
+    const response = await axios.post('https://warframe-relic-app.onrender.com/api/relics/update-tev');
     console.log('TEV update response:', response.data);
   } catch (error) {
     console.error('Error updating TEV:', error);

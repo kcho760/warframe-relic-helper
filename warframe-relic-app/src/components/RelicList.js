@@ -38,7 +38,7 @@ const RelicList = ({ filters }) => {
   useEffect(() => {
     const fetchActiveFissures = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/void-fissures/active-fissures');
+        const response = await axios.get('https://warframe-relic-app.onrender.com/api/void-fissures/active-fissures');
         // Check if response.data is an array before setting the state
         if (Array.isArray(response.data)) {
           setActiveFissures(response.data);
