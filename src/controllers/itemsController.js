@@ -90,10 +90,19 @@ const getItemMarketData = async (req, res) => {
     }
 };
 
-const itemInfoTester = async() => {
-    const primaries = new Items({ category: ['Relics'] });
-    console.log(primaries[0].rewards);
-}
+const itemInfoTester = async (itemName) => {
+    try {
+        const orderData = await fetchTopOrders(itemName);
+        console.log(`Test result for ${itemName}: `, orderData);
+        return orderData; // Return the data for further assertions if necessary
+    } catch (error) {
+        console.error('Error during the test:', error);
+    }
+};
+
+itemInfoTester('vasto_prime_barrel').then(data => {
+    // You can add assertions or additional logs here if needed
+});
 
 
 module.exports = {

@@ -17,7 +17,18 @@ router.post('/update-relics-market-data', async (req, res) => {
         res.status(500).send('Error updating relics with market data');
     }
 });
+// Assuming you have a function itemInfoTester in itemsController that expects an itemName
 
-router.get('/item-info-tester', itemsController.itemInfoTester);
+// Route to test market data fetch for a single item
+router.get('/test-item/:itemName', async (req, res) => {
+    const { itemName } = req.params; // Extract itemName from the request parameters
+    try {
+        const data = await itemsController.itemInfoTester(itemName); // Call the itemInfoTester function with the itemName
+        res.status(200).json(data); // Respond with the data received from the itemInfoTester function
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error testing item market data');
+    }
+});
 
 module.exports = router;
