@@ -52,52 +52,61 @@ const getRelicDataFromFirestore = async (req, res) => {
 };
 
 // Function to calculate the TEV for a single relic
-const calculateTEV = (drops) => {
-    // Define the drop chances for an intact relic
-    const dropChances = {
-      "Common": 25.33 / 100,
-      "Uncommon": 11 / 100,
-      "Rare": 2 / 100
-    };
-  
-    // Calculate the TEV using the market data
-    const tev = drops.reduce((acc, drop) => {
-      const chance = dropChances[drop.Rarity];
-      const price = drop.MarketData?.platinumPrice || 0;
-      return acc + (chance * price);
-    }, 0);
+const calculateTEV = (drops, refinementLevel) => {
+  // Drop chances based on refinement level from the provided table
+  const dropChancesByRefinement = {
+    Intact: { "Common": 76 / 100, "Uncommon": 22 / 100, "Rare": 2 / 100 },
+    Exceptional: { "Common": 70 / 100, "Uncommon": 26 / 100, "Rare": 4 / 100 },
+    Flawless: { "Common": 60 / 100, "Uncommon": 34 / 100, "Rare": 6 / 100 },
+    Radiant: { "Common": 50 / 100, "Uncommon": 40 / 100, "Rare": 10 / 100 },
+  };
 
-    // Round to two decimal places and convert back to number
-    return Number(tev.toFixed(2));
+  const dropChances = dropChancesByRefinement[refinementLevel];
+
+  // Calculate the TEV using the market data and the drop chances for the specified refinement level
+  const tev = drops.reduce((acc, drop) => {
+    const chance = dropChances[drop.Rarity];
+    const price = drop.MarketData?.platinumPrice || 0;
+    return acc + (chance * price);
+  }, 0);
+
+  return Number(tev.toFixed(2));
+};
+  
+// Function to update the TEV for each relic in Firestore for each refinement level
+const updateTEVForAllRelicsByRefinement = async () => {
+  const db = admin.firestore();
+  const relicsRef = db.collection('relics');
+  const refinementLevels = ['Intact', 'Exceptional', 'Flawless', 'Radiant'];
+
+  try {
+    const snapshot = await relicsRef.get();
+    const batch = db.batch();
+
+    snapshot.forEach(doc => {
+      const relicData = doc.data();
+      const tevByRefinement = {};
+
+      // Calculate TEV for each refinement level and store it in an object
+      refinementLevels.forEach(level => {
+        tevByRefinement[`${level}TEV`] = calculateTEV(relicData.Drops, level);
+      });
+
+      // Update the document with the TEV for each refinement level
+      batch.update(doc.ref, tevByRefinement);
+    });
+
+    // Commit the batch update
+    await batch.commit();
+    console.log('TEV updated for all relics at each refinement level.');
+  } catch (error) {
+    console.error('Error updating TEV for relics at each refinement level:', error);
+  }
 };
 
-  
-  // Function to update the TEV for each relic in Firestore
-  const updateTEVForAllRelics = async () => {
-    const db = admin.firestore();
-    const relicsRef = db.collection('relics');
-  
-    try {
-      const snapshot = await relicsRef.get();
-      const batch = db.batch();
-  
-      snapshot.forEach(doc => {
-        const relicData = doc.data();
-        const tev = calculateTEV(relicData.Drops);
-        // Update the document with the TEV
-        batch.update(doc.ref, { TEV: tev });
-      });
-  
-      // Commit the batch update
-      await batch.commit();
-      console.log('TEV updated for all relics.');
-    } catch (error) {
-      console.error('Error updating TEV for relics:', error);
-    }
-  };
   
 module.exports = {
     saveAllNonVaultedRelicsToFirestore,
     getRelicDataFromFirestore,
-    updateTEVForAllRelics
+    updateTEVForAllRelicsByRefinement
 };

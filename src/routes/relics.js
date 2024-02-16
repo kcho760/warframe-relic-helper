@@ -16,7 +16,7 @@ router.post('/save-all-relics', async (req, res) => {
 // Route to update TEV for all relics in Firestore
 router.post('/update-tev', async (req, res) => {
     try {
-        await relicsController.updateTEVForAllRelics();
+        await relicsController.updateTEVForAllRelicsByRefinement();
         res.send('TEV updated for all relics.');
     } catch (error) {
         console.error(error);

@@ -81,7 +81,7 @@ input[type="checkbox"] {
   perspective: 1000px;
   flex: 0 0 auto;
   width: 200px;
-  height: 300px; /* Adjust based on your content */
+  height: 230px; /* Adjust based on your content */
   /* margin: 10px; */
   text-align: center;
   position: relative;
