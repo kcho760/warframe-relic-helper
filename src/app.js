@@ -5,16 +5,31 @@ const relicRoutes = require('./routes/relics');
 const itemsRoutes = require('./routes/items');
 const voidFissureRoutes = require('./routes/voidFissures');
 const cron = require('node-cron');
+const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Initialize Firebase Admin SDK with appropriate credentials
-// const serviceAccount = require('../warframe-relic-app-firebase-adminsdk-jhq8n-9149d732c0.json');
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     databaseURL: 'https://console.firebase.google.com/u/0/project/warframe-relic-app/firestore/data/~2F'
-// });
+if (process.env.FIREBASE_PROJECT_ID &&
+  process.env.FIREBASE_PRIVATE_KEY &&
+  process.env.FIREBASE_CLIENT_EMAIL) {
+
+  // Initialize Firebase Admin SDK with environment variables
+  admin.initializeApp({
+      credential: admin.credential.cert({
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Replace is necessary if the private key contains newline characters
+          clientEmail: process.env.FIREBASE_CLIENT_EMAIL
+      }),
+      // Your databaseURL will be something like 'https://<databaseName>.firebaseio.com'
+      databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`
+  });
+
+} else {
+  console.warn('Firebase environment variables are not set!');
+  // Handle the case where environment variables are not set
+  // Maybe exit the process or set up a local configuration
+}
 
 app.use(cors());
 
