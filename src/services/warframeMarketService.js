@@ -10,18 +10,18 @@ const fetchTopOrders = async (itemUrlName) => {
       }
     });
 
-    // Filter to find the first sell order where the user's status is 'ingame'
-    const ingameSellOrder = response.data.data.sell
-      .find(order => order.user.status === 'ingame');
+    // Filter sell orders to exclude any where the user's status is not 'ingame'
+    const filteredSellOrders = response.data.data.sell.filter(order => order.user.status === 'ingame');
 
-    // Check if an ingame sell order is found
-    if (!ingameSellOrder) {
-      console.log('No ingame sell orders available.');
-      return null;
-    }
+    // Construct a new object to mimic the original response structure, but only with 'ingame' sell orders
+    const filteredResponseData = {
+      ...response.data.data,
+      sell: filteredSellOrders
+    };
 
-    console.log('First ingame sell order:', ingameSellOrder);
-    return ingameSellOrder;
+    // Log to verify the filtered result
+    console.log('Filtered ingame sell orders:', filteredResponseData);
+    return filteredResponseData;
 
   } catch (error) {
     console.error('Error response:', error.response);
