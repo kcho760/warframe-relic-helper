@@ -84,6 +84,13 @@ function Home() {
         ? [...(checkedItems[groupName] || []), name] 
         : (checkedItems[groupName] || []).filter(item => item !== name);
       setCheckedItems({ ...checkedItems, [groupName]: updatedItems });
+    } else if(groupName === 'refinementLevel'){
+      setCheckedItems(prev => ({
+        ...prev,
+        [groupName]: checked
+          ? [...prev[groupName], name]
+          : prev[groupName].filter(r => r !== name)
+      }));
     } else {
       // For boolean values (isHard, isStorm)
       setCheckedItems({ ...checkedItems, [name]: checked });

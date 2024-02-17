@@ -5,7 +5,9 @@ const fetchActiveVoidFissures = async () => {
 
   try {
     const response = await axios.get(url);
-    return response.data; // This should return an array of active fissures
+    // Filter out any fissures where isStorm is true
+    const nonStormFissures = response.data.filter(fissure => !fissure.isStorm);
+    return nonStormFissures; // This should return an array of active fissures excluding storms
   } catch (error) {
     console.error('Error fetching active void fissures:', error);
     return [];

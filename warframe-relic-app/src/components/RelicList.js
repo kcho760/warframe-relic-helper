@@ -8,11 +8,12 @@ const RelicList = ({ filters }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeFissures, setActiveFissures] = useState([]);
-  const [flippedCardIds, setFlippedCardIds] = useState(new Set()); // Use a Set to manage flipped cards
+  const [flippedCardIds, setFlippedCardIds] = useState(new Set());
 
   useEffect(() => {
     const fetchRelics = async () => {
       setLoading(true);
+      console.log(filters);
       try {
         const querySnapshot = await getDocs(collection(db, 'relics'));
         let relicsData = querySnapshot.docs.map(doc => ({
@@ -21,8 +22,9 @@ const RelicList = ({ filters }) => {
         }));
 
         relicsData = applyFilters(relicsData, filters, activeFissures);
-        relicsData.sort((a, b) => b.TEV - a.TEV);
-
+        // Sort based on the selected refinement level TEV, falling back to default TEV if not available
+        relicsData.sort((a, b) => (b[filters.refinementLevel] || b.TEV) - (a[filters.refinementLevel] || a.TEV));
+        console.log(relicsData)
         setRelics(relicsData);
       } catch (err) {
         console.error(err);
@@ -39,7 +41,6 @@ const RelicList = ({ filters }) => {
     const fetchActiveFissures = async () => {
       try {
         const response = await axios.get('https://warframe-relic-app.onrender.com/api/void-fissures/active-fissures');
-        // Check if response.data is an array before setting the state
         if (Array.isArray(response.data)) {
           setActiveFissures(response.data);
         } else {
@@ -55,23 +56,59 @@ const RelicList = ({ filters }) => {
     fetchActiveFissures();
   }, []);
   
+  // const applyFilters = (relicsData, filters, activeFissures) => {
+  //   const missionTypes = [...filters.missionType, ...filters.endlessMission];
+  //   const matchingFissures = activeFissures.filter(fissure =>
+  //     (missionTypes.length === 0 || missionTypes.includes(fissure.missionType)) &&
+  //     (filters.tier.length === 0 || filters.tier.includes(fissure.tier)) &&
+  //     (filters.steelPath === 'both' || fissure.isHard.toString() === filters.steelPath)
+  //   );
+
+  //   if (matchingFissures.length === 0) {
+  //     return [];
+  //   }
+
+  //   const matchingTiers = new Set(matchingFissures.map(fissure => fissure.tier));
+  //   return relicsData.filter(relic => matchingTiers.has(relic.Tier));
+  // };
 
   const applyFilters = (relicsData, filters, activeFissures) => {
-    const missionTypes = [...filters.missionType, ...filters.endlessMission];
-    const matchingFissures = activeFissures.filter(fissure =>
-      (missionTypes.length === 0 || missionTypes.includes(fissure.missionType)) &&
-      (filters.tier.length === 0 || filters.tier.includes(fissure.tier)) &&
-      (filters.steelPath === 'both' || fissure.isHard.toString() === filters.steelPath)
+    // Debug object to store reasons for relic inclusion
+    let debugInfo = {};
+  
+    const activeFissureTiers = new Set(activeFissures
+      .filter(fissure => {
+        const matchesMissionType = filters.missionType.length === 0 || filters.missionType.includes(fissure.missionType);
+        const matchesSteelPath = filters.steelPath === 'both' || String(fissure.isHard) === filters.steelPath;
+        return matchesMissionType && matchesSteelPath;
+      })
+      .map(fissure => {
+        // Add debug info for active fissure tiers
+        debugInfo[fissure.tier] = `Included due to active fissure with mission type: ${fissure.missionType}, Steel Path: ${fissure.isHard}`;
+        return fissure.tier;
+      })
     );
-
-    if (matchingFissures.length === 0) {
-      return [];
-    }
-
-    const matchingTiers = new Set(matchingFissures.map(fissure => fissure.tier));
-    return relicsData.filter(relic => matchingTiers.has(relic.Tier));
+  
+    const filteredRelics = relicsData.filter(relic => {
+      const isActiveFissureTier = activeFissureTiers.has(relic.Tier);
+      const matchesTierFilter = filters.tier.length === 0 || filters.tier.includes(relic.Tier);
+  
+      // Add reasons for relic inclusion
+      if (isActiveFissureTier && matchesTierFilter) {
+        debugInfo[relic.id] = `Relic included. Tier: ${relic.Tier}, Active Fissure Tier: ${isActiveFissureTier}, Matches Tier Filter: ${matchesTierFilter}`;
+      } else {
+        debugInfo[relic.id] = `Relic excluded. Tier: ${relic.Tier}, Active Fissure Tier: ${isActiveFissureTier}, Matches Tier Filter: ${matchesTierFilter}`;
+      }
+  
+      return isActiveFissureTier && matchesTierFilter;
+    });
+  
+    // Log the debug info
+    console.log(debugInfo);
+  
+    return filteredRelics;
   };
-
+  
   const toggleCardFlip = (id) => {
     setFlippedCardIds(prevIds => {
       const newFlippedIds = new Set(prevIds);
@@ -104,8 +141,15 @@ const RelicList = ({ filters }) => {
             <div className="relic-item-front">
               <h2>{relic.Name}</h2>
               <p>Tier: {relic.Tier}</p>
-              {/* Show the TEV based on the selected refinement level */}
-              <p>TEV ({filters.selectedRefinementLevel}): {relic[`${filters.selectedRefinementLevel}TEV`]}p</p>
+              {/* Display TEV for each selected refinement level or Intact TEV as default */}
+              {filters.refinementLevel.length > 0 ? (
+                filters.refinementLevel.map(level => (
+                  <p key={level}>TEV ({level}): {relic[`${level}TEV`] || 'N/A'}p</p>
+                ))
+              ) : (
+                // Display IntactTEV as the default value
+                <p>TEV (Intact): {relic.IntactTEV || 'N/A'}p</p>
+              )}
             </div>
             <div className="relic-item-back">
               {/* Back content (e.g., Drops) */}
@@ -119,7 +163,6 @@ const RelicList = ({ filters }) => {
           </div>
         </div>
       ))}
-
     </div>
   );
 };
