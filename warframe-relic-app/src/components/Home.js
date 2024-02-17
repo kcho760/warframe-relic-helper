@@ -8,14 +8,13 @@ function Home() {
   const [allTiersSelected, setAllTiersSelected] = useState(true);
   const [checkedItems, setCheckedItems] = useState({
     missionType: [],
-    endlessMission: [], // Ensure this is initialized as an empty array
+    endlessMission: [],
     tier: [],
-    steelPath: 'both', // Possible values: 'true', 'false', 'both'
+    steelPath: 'both',
     isStorm: false,
+    refinementLevel: [], // Add this new state field
   });
   
-  
-
   const missionTypes = [
     { name: 'Extermination', label: 'Extermination' },
     { name: 'Capture', label: 'Capture' },
@@ -54,6 +53,14 @@ function Home() {
     { name: 'Axi', label: 'Axi' },
     { name: 'Requiem', label: 'Requiem'}
   ];
+
+  const refinementLevels = [
+    { name: 'Intact', label: 'Intact' },
+    { name: 'Exceptional', label: 'Exceptional' },
+    { name: 'Flawless', label: 'Flawless' },
+    { name: 'Radiant', label: 'Radiant' },
+  ];
+  
 
   const handleTierChange = (event) => {
     const { name, checked } = event.target;
@@ -146,6 +153,13 @@ function Home() {
             Non-Steel Path Only
           </label>
         </div>
+        <CheckboxGroup
+          groupName="refinementLevel"
+          items={refinementLevels}
+          checkedItems={checkedItems}
+          setCheckedItems={setCheckedItems}
+          handleCheckboxChange={(event) => handleCheckboxChange(event, 'refinementLevel')}
+        />
         <div>
           <label>
             <input

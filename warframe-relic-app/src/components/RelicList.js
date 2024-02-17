@@ -102,17 +102,13 @@ const RelicList = ({ filters }) => {
         <div key={relic.id} className={`relic-item ${flippedCardIds.has(relic.id) ? 'flipped' : ''}`} onClick={() => toggleCardFlip(relic.id)}>
           <div className="relic-item-flipper">
             <div className="relic-item-front">
-              {/* Front content */}
               <h2>{relic.Name}</h2>
               <p>Tier: {relic.Tier}</p>
-              <p>TEV: {relic.TEV}</p>
+              {/* Show the TEV based on the selected refinement level */}
+              <p>TEV ({filters.selectedRefinementLevel}): {relic[`${filters.selectedRefinementLevel}TEV`]}p</p>
             </div>
             <div className="relic-item-back">
               {/* Back content (e.g., Drops) */}
-              <div className="relic-item-back-header">
-                <span>Name</span>
-                <span>Platinum</span>
-              </div>
               {relic.Drops.map((drop, index) => (
                 <div key={index} className="relic-item-drop">
                   <span className="relic-item-drop-name">{`${drop.Item} ${drop.Part}`}</span>
@@ -123,6 +119,7 @@ const RelicList = ({ filters }) => {
           </div>
         </div>
       ))}
+
     </div>
   );
 };
