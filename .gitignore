@@ -2,3 +2,4 @@ node_modules
 .env
 /src/services/firebase.js
 warframe-relic-app-firebase-adminsdk-jhq8n-9149d732c0.json
+todo.md
