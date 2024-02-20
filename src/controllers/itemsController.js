@@ -2,7 +2,7 @@
 
 const Bottleneck = require('bottleneck');
 const admin = require('firebase-admin');
-const { fetchTopOrders } = require('../services/warframeMarketService');
+const { fetchTopOrders, fetchAverageVolumeLast7Days } = require('../services/warframeMarketService');
 const { getNonVaultedRelicsSorted } = require('../services/snekwWikiService');
 const Items = require('warframe-items')
 
@@ -90,6 +90,43 @@ const getItemMarketData = async (req, res) => {
     }
 };
 
+// New function to update 7-day volume average for each drop in a relic
+const updateDropWith7DayVolumeAverage = async (drop) => {
+    if (drop.Item !== 'Forma') {
+        const itemUrlName = formatItemNameForUrl(drop.Item, drop.Part);
+        const averageVolume = await fetchAverageVolumeLast7Days(itemUrlName);
+
+        // If MarketData exists, add/update the averageVolume to it, otherwise create it
+        if (drop.MarketData) {
+            drop.MarketData['7DayVolumeAverage'] = averageVolume;
+        } else {
+            drop.MarketData = { '7DayVolumeAverage': averageVolume };
+        }
+    }
+    return drop;
+};
+
+// Function to update all relics with the 7-day volume average
+const updateAllRelicsWith7DayVolumeAverage = async () => {
+    const db = admin.firestore();
+    const relicsRef = db.collection('relics');
+    const relicsSnapshot = await relicsRef.get();
+
+    for (const relicDoc of relicsSnapshot.docs) {
+        const relicData = relicDoc.data();
+        const updatedDrops = await Promise.all(relicData.Drops.map(drop =>
+            limiter.schedule(() => updateDropWith7DayVolumeAverage(drop))
+        ));
+
+        // Update the relic document with the new drops data
+        await relicDoc.ref.update({ Drops: updatedDrops });
+        console.log(`Updated 7-day volume average for relic: ${relicData.Name}`);
+    }
+
+    console.log('All relics have been updated with 7-day volume average.');
+};
+
+
 const itemInfoTester = async (itemName) => {
     try {
         const orderData = await fetchTopOrders(itemName);
@@ -108,5 +145,6 @@ itemInfoTester('vasto_prime_barrel').then(data => {
 module.exports = {
     itemInfoTester,
     getItemMarketData,
-    updateAllRelicsWithMarketData // Export the new function for use in other parts of the application
+    updateAllRelicsWithMarketData,
+    updateAllRelicsWith7DayVolumeAverage
 };

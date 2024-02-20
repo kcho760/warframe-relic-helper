@@ -31,6 +31,33 @@ const fetchTopOrders = async (itemUrlName) => {
   }
 };
 
+async function fetchAverageVolumeLast7Days(itemUrlName) {
+  const url = `https://api.warframe.market/v1/items/${encodeURIComponent(itemUrlName)}/statistics`;
+  
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const statsClosed90Days = data.payload.statistics_closed['90days'];
+    
+    // Assuming that the stats are sorted from newest to oldest, slice the last 7 entries
+    const last7Days = statsClosed90Days.slice(-7);
+
+    // Calculate the average volume
+    const totalVolume = last7Days.reduce((acc, day) => acc + day.volume, 0);
+    const averageVolume = totalVolume / last7Days.length;
+
+    console.log(`Average volume over the last 7 days: ${averageVolume}`);
+    return averageVolume;
+  } catch (error) {
+    console.error("There was an error fetching the average volume:", error);
+  }
+}
+
 module.exports = {
+  fetchAverageVolumeLast7Days,
   fetchTopOrders
 };

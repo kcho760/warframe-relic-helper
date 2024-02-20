@@ -31,4 +31,14 @@ router.get('/test-item/:itemName', async (req, res) => {
     }
 });
 
+router.post('/update-relics-7-day-volume', async (req, res) => {
+    try {
+        await itemsController.updateAllRelicsWith7DayVolumeAverage();
+        res.send('All relics have been updated with the 7-day average volume.');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error updating relics with the 7-day average volume');
+    }
+});
+
 module.exports = router;
