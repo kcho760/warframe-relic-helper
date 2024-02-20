@@ -90,11 +90,13 @@ const getItemMarketData = async (req, res) => {
     }
 };
 
-// New function to update 7-day volume average for each drop in a relic
 const updateDropWith7DayVolumeAverage = async (drop) => {
     if (drop.Item !== 'Forma') {
         const itemUrlName = formatItemNameForUrl(drop.Item, drop.Part);
-        const averageVolume = await fetchAverageVolumeLast7Days(itemUrlName);
+        let averageVolume = await fetchAverageVolumeLast7Days(itemUrlName);
+
+        // Round the averageVolume to a whole number
+        averageVolume = Math.round(averageVolume);
 
         // If MarketData exists, add/update the averageVolume to it, otherwise create it
         if (drop.MarketData) {
@@ -114,12 +116,25 @@ const updateAllRelicsWith7DayVolumeAverage = async () => {
 
     for (const relicDoc of relicsSnapshot.docs) {
         const relicData = relicDoc.data();
-        const updatedDrops = await Promise.all(relicData.Drops.map(drop =>
-            limiter.schedule(() => updateDropWith7DayVolumeAverage(drop))
-        ));
 
-        // Update the relic document with the new drops data
-        await relicDoc.ref.update({ Drops: updatedDrops });
+        const updatedDrops = await Promise.all(relicData.Drops.map(async (drop) => {
+            const updatedDrop = await limiter.schedule(() => updateDropWith7DayVolumeAverage(drop));
+
+            // Ensure MarketData exists and 7DayVolumeAverage is not undefined
+            if (updatedDrop.MarketData && typeof updatedDrop.MarketData['7DayVolumeAverage'] === 'undefined') {
+                // Set a default value or handle the undefined case as needed
+                updatedDrop.MarketData['7DayVolumeAverage'] = 0; // Example default value
+            }
+
+            return updatedDrop;
+        }));
+
+        // Before updating Firestore, ensure that no drops contain undefined 7DayVolumeAverage
+        // This step may be redundant with the above check but is a good final validation
+        const validDrops = updatedDrops.filter(drop => drop.MarketData && typeof drop.MarketData['7DayVolumeAverage'] !== 'undefined');
+
+        // Update the relic document with the new drops data, ensuring no undefined values
+        await relicDoc.ref.update({ Drops: validDrops });
         console.log(`Updated 7-day volume average for relic: ${relicData.Name}`);
     }
 
