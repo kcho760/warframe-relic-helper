@@ -4,13 +4,15 @@
 }
 
 
-.top-half, .bottom-half {
-  width: 100%;
+.bottom-half-left, .bottom-half-right {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  width: 50%; /* Adjust this value if you want one side to be wider than the other */
   align-items: center;
+  justify-content: start;
+  padding: 10px;
 }
+
 
 .top-half {
   height: 40vh;
@@ -19,9 +21,11 @@
 }
 
 .bottom-half {
-  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px;
   background-color: #e0e0e0;
-  padding: 20px 0;
 }
 
 .card {
@@ -35,23 +39,21 @@
   margin: 10px;
 }
 
-.group {
-  width: 90%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 10px;
-  padding: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
-
 .checkbox-label {
   margin: 5px;
   cursor: pointer;
   display: block;
   text-align: left;
 }
+
+.checkbox-group-container {
+  border: 1px solid #000000;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+
 
 input[type="checkbox"] {
   margin-right: 10px;

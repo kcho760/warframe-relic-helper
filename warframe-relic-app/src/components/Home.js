@@ -7,7 +7,7 @@ import ActiveFissures from './ActiveFissures';
 function Home() {
   const [allTiersSelected, setAllTiersSelected] = useState(true);
   const [checkedItems, setCheckedItems] = useState({
-    missionType: [],
+    normalMissionTypes: [],
     endlessMission: [],
     tier: [],
     steelPath: 'both',
@@ -15,7 +15,7 @@ function Home() {
     refinementLevel: [], // Add this new state field
   });
   
-  const missionTypes = [
+  const normalMissionTypes = [
     { name: 'Extermination', label: 'Extermination' },
     { name: 'Capture', label: 'Capture' },
     { name: 'Hijack', label: 'Hijack' },
@@ -26,7 +26,7 @@ function Home() {
     { name: 'Spy', label: 'Spy' },
   ];
 
-  const endlessMissionTypes = [
+  const endlessMissionTypes= [
     { name: 'Defense', label: 'Defense' },
     { name: 'Excavation', label: 'Excavation' },
     { name: 'Interception', label: 'Interception' },
@@ -98,7 +98,7 @@ function Home() {
   };
   
   const combinedMissionTypes = [
-    ...checkedItems.missionType,
+    ...checkedItems.normalMissionTypes,
     ...checkedItems.endlessMission,
   ].filter(Boolean); // This removes any falsy values like empty strings
 
@@ -114,91 +114,107 @@ function Home() {
         <RelicList filters={combinedFilters} />
       </div>
       <div className="bottom-half">
-        <CheckboxGroup
-          groupName="missionType" // Use the key from the state here
-          items={missionTypes}
-          checkedItems={checkedItems}
-          setCheckedItems={setCheckedItems}
-          handleCheckboxChange={handleCheckboxChange} // Pass the function here
-        />
-        <CheckboxGroup
-          groupName="endlessMission"
-          items={endlessMissionTypes}
-          checkedItems={checkedItems}
-          setCheckedItems={setCheckedItems}
-          handleCheckboxChange={(event) => handleCheckboxChange(event, 'endlessMission')}
-        />
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="steelPath"
-              value="both"
-              checked={checkedItems.steelPath === 'both'}
-              onChange={handleSteelPathChange}
+        <div className="bottom-half-left">
+          <div className="checkbox-group-container">
+            <CheckboxGroup
+              groupName="normalMissionTypes"
+              items={normalMissionTypes}
+              checkedItems={checkedItems}
+              setCheckedItems={setCheckedItems}
+              handleCheckboxChange={handleCheckboxChange}
             />
-            Both
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="steelPath"
-              value="true"
-              checked={checkedItems.steelPath === 'true'}
-              onChange={handleSteelPathChange}
+          </div>
+          <div className="checkbox-group-container">
+            <CheckboxGroup
+              groupName="endlessMission"
+              items={endlessMissionTypes}
+              checkedItems={checkedItems}
+              setCheckedItems={setCheckedItems}
+              handleCheckboxChange={(event) => handleCheckboxChange(event, 'endlessMission')}
             />
-            Steel Path Only
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="steelPath"
-              value="false"
-              checked={checkedItems.steelPath === 'false'}
-              onChange={handleSteelPathChange}
-            />
-            Non-Steel Path Only
-          </label>
+          </div>
         </div>
-        <CheckboxGroup
-          groupName="refinementLevel"
-          items={refinementLevels}
-          checkedItems={checkedItems}
-          setCheckedItems={setCheckedItems}
-          handleCheckboxChange={(event) => handleCheckboxChange(event, 'refinementLevel')}
-        />
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              name="allTiers"
-              checked={allTiersSelected}
-              onChange={(e) => {
-                setAllTiersSelected(e.target.checked);
-                if (e.target.checked) {
-                  setCheckedItems(prev => ({ ...prev, tier: [] }));
-                }
-              }}
+        <div className="bottom-half-right">
+          <div className="checkbox-group-container">
+            {/* Steel Path Radio Buttons */}
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="steelPath"
+                  value="both"
+                  checked={checkedItems.steelPath === 'both'}
+                  onChange={handleSteelPathChange}
+                />
+                Both
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="steelPath"
+                  value="true"
+                  checked={checkedItems.steelPath === 'true'}
+                  onChange={handleSteelPathChange}
+                />
+                Steel Path Only
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="steelPath"
+                  value="false"
+                  checked={checkedItems.steelPath === 'false'}
+                  onChange={handleSteelPathChange}
+                />
+                Non-Steel Path Only
+              </label>
+            </div>
+          </div>
+          <div className="checkbox-group-container">
+            <CheckboxGroup
+              groupName="refinementLevel"
+              items={refinementLevels}
+              checkedItems={checkedItems}
+              setCheckedItems={setCheckedItems}
+              handleCheckboxChange={(event) => handleCheckboxChange(event, 'refinementLevel')}
             />
-            All Tiers
-          </label>
-          {relicTypes.map((relicType) => (
-            <label key={relicType.name}>
-              <input
-                type="checkbox"
-                name={relicType.name}
-                checked={checkedItems.tier.includes(relicType.name)}
-                onChange={handleTierChange}
-                // disabled={allTiersSelected} // Disable if all tiers are selected
-              />
-              {relicType.label}
-            </label>
-          ))}
+          </div>
+          <div className="checkbox-group-container">
+            {/* Relic Tiers Checkboxes */}
+            <div>
+              {/* <label>
+                <input
+                  type="checkbox"
+                  name="allTiers"
+                  checked={allTiersSelected}
+                  onChange={(e) => {
+                    setAllTiersSelected(e.target.checked);
+                    if (e.target.checked) {
+                      setCheckedItems(prev => ({ ...prev, tier: [] }));
+                    }
+                  }}
+                />
+                All Tiers
+              </label> */}
+              {relicTypes.map((relicType) => (
+                <label key={relicType.name}>
+                  <input
+                    type="checkbox"
+                    name={relicType.name}
+                    checked={checkedItems.tier.includes(relicType.name)}
+                    onChange={handleTierChange}
+                  />
+                  {relicType.label}
+                </label>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-        <ActiveFissures filters={combinedFilters}/>
+      <ActiveFissures filters={combinedFilters}/>
     </div>
   );
+  
 }
 
 export default Home;
