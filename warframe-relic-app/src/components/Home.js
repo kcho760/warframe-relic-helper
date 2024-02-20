@@ -182,20 +182,6 @@ function Home() {
           <div className="checkbox-group-container">
             {/* Relic Tiers Checkboxes */}
             <div>
-              {/* <label>
-                <input
-                  type="checkbox"
-                  name="allTiers"
-                  checked={allTiersSelected}
-                  onChange={(e) => {
-                    setAllTiersSelected(e.target.checked);
-                    if (e.target.checked) {
-                      setCheckedItems(prev => ({ ...prev, tier: [] }));
-                    }
-                  }}
-                />
-                All Tiers
-              </label> */}
               {relicTypes.map((relicType) => (
                 <label key={relicType.name}>
                   <input
