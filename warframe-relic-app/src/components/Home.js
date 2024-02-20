@@ -5,7 +5,7 @@ import CheckboxGroup from './CheckboxGroup';
 import ActiveFissures from './ActiveFissures';
 
 function Home() {
-  const [allTiersSelected, setAllTiersSelected] = useState(true);
+  // const [allTiersSelected, setAllTiersSelected] = useState(true);
   const [checkedItems, setCheckedItems] = useState({
     normalMissionTypes: [],
     endlessMission: [],
@@ -69,7 +69,7 @@ function Home() {
         ? [...prev.tier, name]
         : prev.tier.filter(tier => tier !== name);
       
-      setAllTiersSelected(newTiers.length === 0);
+      // setAllTiersSelected(newTiers.length === 0);
       return { ...prev, tier: newTiers };
     });
   };
