@@ -9,7 +9,7 @@
   flex-direction: column;
   width: 50%; /* Adjust this value if you want one side to be wider than the other */
   align-items: center;
-  justify-content: start;
+  justify-content: center;
   padding: 10px;
 }
 
