@@ -22,12 +22,9 @@ const updateDropWithMarketData = async (drop) => {
         const marketData = await fetchTopOrders(itemUrlName);
         if (marketData && marketData.sell && marketData.sell.length > 0) {
             const topSellerPlatinum = marketData.sell[0].platinum; // Assuming the first order in the array has the platinum price
-            return {
-                ...drop,
-                MarketData: {
-                    platinumPrice: topSellerPlatinum // Update the platinum price in the MarketData object
-                }
-            };
+            // Only update the platinumPrice within the MarketData object to preserve other fields like 7DayVolumeAverage
+            drop.MarketData = drop.MarketData || {};
+            drop.MarketData.platinumPrice = topSellerPlatinum;
         }
     }
     return drop;
@@ -47,23 +44,18 @@ const updateRelicWithMarketData = async (relic) => {
 const updateAllRelicsWithMarketData = async () => {
     const db = admin.firestore();
     const allRelicData = await getNonVaultedRelicsSorted();
-    // const relicNames = Object.keys(allRelicData).slice(0, 1); // Get only the first 3 relics for testing
-
+    // Iterate over all relics
     for (const relicName in allRelicData) {
         const relic = allRelicData[relicName];
         const updatedRelic = await updateRelicWithMarketData(relic);
-
-        // Before saving, log the updated relic object to verify the structure
-        console.log(`Saving updated relic data for ${relic.Name}: `, JSON.stringify(updatedRelic, null, 2));
-
-        // Save the updated relic document with market data, merge with existing data
-        await db.collection('relics').doc(relic.Name.replace(/ /g, '_')).set(updatedRelic, { merge: true });
+        // Get a reference to the Firestore document for the current relic
+        const relicDocRef = db.collection('relics').doc(relic.Name.replace(/ /g, '_'));
+        // Preserve the existing document data, especially the 7DayVolumeAverage, and merge with the updated market data
+        await relicDocRef.set(updatedRelic, { merge: true });
         console.log(`Updated ${relic.Name} with market data.`);
     }
-
     console.log('All relics have been updated with market data.');
 };
-
 
 // Existing function to get market data for an individual item
 const getItemMarketData = async (req, res) => {
