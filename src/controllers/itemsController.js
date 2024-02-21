@@ -4,7 +4,6 @@ const Bottleneck = require('bottleneck');
 const admin = require('firebase-admin');
 const { fetchTopOrders, fetchAverageVolumeLast7Days } = require('../services/warframeMarketService');
 const { getNonVaultedRelicsSorted } = require('../services/snekwWikiService');
-const Items = require('warframe-items')
 
 // Initialize a new Bottleneck limiter
 const limiter = new Bottleneck({

@@ -35,12 +35,21 @@ app.use(cors());
 
 app.use(express.json()); // for parsing application/json
 
+const axios = require('axios');
+const cron = require('node-cron');
+
+// Combined cron job for updating relics market data and 7-day volume
 cron.schedule('0 * * * *', async () => {
   try {
-    const response = await axios.post('https://warframe-relic-app.onrender.com/api/items/update-relics-market-data');
-    console.log('Relics market data update response:', response.data);
+    // First, update relics market data
+    const marketDataResponse = await axios.post('https://warframe-relic-app.onrender.com/api/items/update-relics-market-data');
+    console.log('Relics market data update response:', marketDataResponse.data);
+
+    // Then, update relics 7-day volume
+    const volumeResponse = await axios.post('https://warframe-relic-app.onrender.com/api/items/update-relics-7-day-volume');
+    console.log('Relics 7-day volume update response:', volumeResponse.data);
   } catch (error) {
-    console.error('Error updating relics market data:', error);
+    console.error('Error in combined cron job:', error);
   }
 });
 
@@ -53,14 +62,6 @@ cron.schedule('5 * * * *', async () => {
   }
 });
 
-cron.schedule('0 0 * * *', async () => {
-  try {
-    const response = await axios.post('https://warframe-relic-app.onrender.com/api/items/update-relics-7-day-volume');
-    console.log('Relics 7-day volume update response:', response.data);
-  } catch (error) {
-    console.error('Error updating relics 7-day volume:', error);
-  }
-});
 
 // Serve your routes
 app.use('/api/relics', relicRoutes);
