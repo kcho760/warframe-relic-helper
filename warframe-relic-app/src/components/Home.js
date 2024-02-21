@@ -134,6 +134,25 @@ function Home() {
             />
           </div>
         </div>
+        <div>
+          <div>This tool is meant to be used to find what relics to run for maximum potential profit while seeing what fissures are available currently.</div>
+          <div>Choose what type of missions you want to run as well as settings for steel path, refinement levels of relics(optional, default is Intact), and types of relics(optional)</div>
+          <div>Relics are sorted by TEV.</div>
+          <div>TEV=∑(Chance 
+              i
+              ​
+              ×Price 
+              i
+              ​
+              ×Volume 
+              i
+              ​
+              )</div>
+          <div>Volume is put there for you to make sure your items will move quickly.</div>
+          <div>Market Prices and volume is updated on the hour.</div>
+          <div>Relics are sorted by highest refinement chosen.</div>
+          <div>Currently, void storms are removed.</div>
+        </div>
         <div className="bottom-half-right">
           <div className="checkbox-group-container">
             {/* Steel Path Radio Buttons */}

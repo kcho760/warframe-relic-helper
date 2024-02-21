@@ -134,7 +134,7 @@ const RelicList = ({ filters }) => {
                 ))
               ) : (
                 // Display IntactTEV as the default value
-                <p>TEV (Intact): {relic.IntactTEV || 'N/A'}p</p>
+                <p>TEV Score (Intact): {relic.IntactTEV || 'N/A'}</p>
               )}
             </div>
             <div className="relic-item-back">
