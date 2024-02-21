@@ -13,39 +13,24 @@ const RelicList = ({ filters }) => {
   useEffect(() => {
     const fetchRelics = async () => {
       setLoading(true);
-      console.log('Current filters:', filters);
       try {
         const querySnapshot = await getDocs(collection(db, 'relics'));
         let relicsData = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-  
-        console.log('Initial fetched data:', relicsData);
-  
         relicsData = applyFilters(relicsData, filters, activeFissures);
-        console.log('Data after filters applied:', relicsData);
-  
-        // Sort based on the selected refinement level TEV, defaulting to IntactTEV
         relicsData.sort((a, b) => {
-          // Determine the refinement level, default to 'IntactTEV' if none is provided
           const refinementLevel = Array.isArray(filters.refinementLevel) && filters.refinementLevel.length === 0
             ? 'IntactTEV'
             : `${filters.refinementLevel}TEV`;
   
-          // Log the refinement level being used for sorting
-          console.log(`Sorting by: ${refinementLevel}`);
-  
           const aValue = a[refinementLevel] !== undefined ? Number(a[refinementLevel]) : Number(a['IntactTEV']);
           const bValue = b[refinementLevel] !== undefined ? Number(b[refinementLevel]) : Number(b['IntactTEV']);
-          
-          // Log the values that are being compared for sorting
-          console.log(`Comparing ${a.id} (${aValue}) to ${b.id} (${bValue})`);
           
           return bValue - aValue;
         });
   
-        console.log('Data after sorting:', relicsData);
         setRelics(relicsData);
       } catch (err) {
         console.error('Failed to fetch relics:', err);
@@ -107,10 +92,6 @@ const RelicList = ({ filters }) => {
   
       return isActiveFissureTier && matchesTierFilter;
     });
-  
-    // Log the debug info
-    console.log(debugInfo);
-  
     return filteredRelics;
   };
   
