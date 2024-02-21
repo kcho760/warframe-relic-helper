@@ -13,43 +13,40 @@ const RelicList = ({ filters }) => {
   useEffect(() => {
     const fetchRelics = async () => {
       setLoading(true);
-      console.log(filters);
+      console.log('Current filters:', filters);
       try {
         const querySnapshot = await getDocs(collection(db, 'relics'));
         let relicsData = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-
+  
+        console.log('Initial fetched data:', relicsData);
+  
         relicsData = applyFilters(relicsData, filters, activeFissures);
-        // Sort based on the selected refinement level TEV, falling back to default TEV if not available
+        console.log('Data after filters applied:', relicsData);
+  
+        // Sort based on the selected refinement level TEV, defaulting to IntactTEV
         relicsData.sort((a, b) => {
-          // Check if filters.refinementLevel is provided and has a corresponding TEV value on the relic
-          // If not, default to 'IntactTEV'
-          const aTEV = filters.refinementLevel && a[`${filters.refinementLevel}TEV`] !== undefined 
-            ? a[`${filters.refinementLevel}TEV`] 
-            : a['IntactTEV'];
-          const bTEV = filters.refinementLevel && b[`${filters.refinementLevel}TEV`] !== undefined 
-            ? b[`${filters.refinementLevel}TEV`] 
-            : b['IntactTEV'];
-          
-          // Ensure that we are comparing numbers
-          return Number(bTEV) - Number(aTEV);
+          const aTEV = a[`${filters.refinementLevel}TEV`] || a['IntactTEV'];
+          const bTEV = b[`${filters.refinementLevel}TEV`] || b['IntactTEV'];
+          console.log(`Comparing ${a.id}: ${aTEV} to ${b.id}: ${bTEV}`); // Log the values being compared
+          return bTEV - aTEV;
         });
-        
-        console.log(relicsData)
+  
+        console.log('Data after sorting:', relicsData);
         setRelics(relicsData);
       } catch (err) {
-        console.error(err);
+        console.error('Failed to fetch relics:', err);
         setError('Failed to fetch relics');
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchRelics();
   }, [filters, activeFissures]);
-
+  
   useEffect(() => {
     const fetchActiveFissures = async () => {
       try {
