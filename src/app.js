@@ -35,9 +35,6 @@ app.use(cors());
 
 app.use(express.json()); // for parsing application/json
 
-const axios = require('axios');
-const cron = require('node-cron');
-
 // Combined cron job for updating relics market data and 7-day volume
 cron.schedule('0 * * * *', async () => {
   try {
