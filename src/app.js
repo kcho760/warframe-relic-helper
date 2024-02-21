@@ -44,7 +44,7 @@ cron.schedule('0 * * * *', async () => {
   }
 });
 
-cron.schedule('0 * * * *', async () => {
+cron.schedule('5 * * * *', async () => {
   try {
     const response = await axios.post('https://warframe-relic-app.onrender.com/api/relics/update-tev');
     console.log('TEV update response:', response.data);

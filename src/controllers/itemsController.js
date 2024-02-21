@@ -21,14 +21,17 @@ const updateDropWithMarketData = async (drop) => {
         const itemUrlName = formatItemNameForUrl(drop.Item, drop.Part);
         const marketData = await fetchTopOrders(itemUrlName);
         if (marketData && marketData.sell && marketData.sell.length > 0) {
-            const topSellerPlatinum = marketData.sell[0].platinum; // Assuming the first order in the array has the platinum price
-            // Only update the platinumPrice within the MarketData object to preserve other fields like 7DayVolumeAverage
-            drop.MarketData = drop.MarketData || {};
-            drop.MarketData.platinumPrice = topSellerPlatinum;
+            const topSellerPlatinum = marketData.sell[0].platinum;
+            // Preserve existing MarketData and only update the platinumPrice
+            drop.MarketData = {
+                ...drop.MarketData,
+                platinumPrice: topSellerPlatinum
+            };
         }
     }
     return drop;
 };
+
 
 // Function that updates all drops within a relic with market data
 const updateRelicWithMarketData = async (relic) => {
@@ -86,19 +89,16 @@ const updateDropWith7DayVolumeAverage = async (drop) => {
     if (drop.Item !== 'Forma') {
         const itemUrlName = formatItemNameForUrl(drop.Item, drop.Part);
         let averageVolume = await fetchAverageVolumeLast7Days(itemUrlName);
-
-        // Round the averageVolume to a whole number
         averageVolume = Math.round(averageVolume);
-
-        // If MarketData exists, add/update the averageVolume to it, otherwise create it
-        if (drop.MarketData) {
-            drop.MarketData['7DayVolumeAverage'] = averageVolume;
-        } else {
-            drop.MarketData = { '7DayVolumeAverage': averageVolume };
-        }
+        // Update the MarketData object with the new averageVolume, preserving existing data
+        drop.MarketData = {
+            ...drop.MarketData,
+            '7DayVolumeAverage': averageVolume
+        };
     }
     return drop;
 };
+
 
 // Function to update all relics with the 7-day volume average
 const updateAllRelicsWith7DayVolumeAverage = async () => {
