@@ -24,15 +24,19 @@ const RelicList = ({ filters }) => {
         relicsData = applyFilters(relicsData, filters, activeFissures);
         // Sort based on the selected refinement level TEV, falling back to default TEV if not available
         relicsData.sort((a, b) => {
-          // Determine the refinement level property name, defaulting to 'IntactTEV' if none is selected
-          const refinementProperty = filters.refinementLevel ? `${filters.refinementLevel}TEV` : 'IntactTEV';
+          // Check if filters.refinementLevel is provided and has a corresponding TEV value on the relic
+          // If not, default to 'IntactTEV'
+          const aTEV = filters.refinementLevel && a[`${filters.refinementLevel}TEV`] !== undefined 
+            ? a[`${filters.refinementLevel}TEV`] 
+            : a['IntactTEV'];
+          const bTEV = filters.refinementLevel && b[`${filters.refinementLevel}TEV`] !== undefined 
+            ? b[`${filters.refinementLevel}TEV`] 
+            : b['IntactTEV'];
           
-          // Extract TEV values for the current refinement level, default to IntactTEV if not available
-          const aValue = a[refinementProperty] !== undefined ? a[refinementProperty] : a['IntactTEV'];
-          const bValue = b[refinementProperty] !== undefined ? b[refinementProperty] : b['IntactTEV'];
-          
-          return Number(bValue) - Number(aValue);
+          // Ensure that we are comparing numbers
+          return Number(bTEV) - Number(aTEV);
         });
+        
         console.log(relicsData)
         setRelics(relicsData);
       } catch (err) {
