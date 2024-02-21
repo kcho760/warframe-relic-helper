@@ -66,13 +66,14 @@ input[type="checkbox"] {
 .relic-item {
   perspective: 1000px;
   flex: 0 0 auto;
-  width: 300px;
+  width: 400px;
   height: 300px;
   margin: 10px;
   text-align: center;
   position: relative;
   border-radius: 5px;
   transition: transform 0.3s ease-in-out;
+  box-sizing: border-box; /* Include padding and border in the width and height */
 }
 
 .relic-item:hover {
@@ -107,7 +108,6 @@ input[type="checkbox"] {
   backface-visibility: hidden;
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
@@ -132,32 +132,47 @@ input[type="checkbox"] {
   width: 100%;
 }
 
-.relic-item-drop-name, .relic-item-drop-platinum {
+.relic-item-drop-name, .relic-item-drop-platinum .relic-item-drop-volume {
   margin: 5px;
 }
 
-.relic-item-back-header {
+
+.relic-item-labels{
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: calc(100% - 10px); /* Adjusted width to account for padding */
   font-weight: bold;
   border-bottom: 1px solid #ddd;
-  padding-bottom: 5px;
+  padding: 5px; /* Added padding */
+  background-color: #f9f9f9; /* Slightly different background for distinction */
+  margin-bottom: 5px; /* Add space between header and items */
 }
 
-/* Add this to ensure content doesn't overflow the card */
-.relic-item-drop-name {
+.relic-item-label1 {
+  flex: 3;
+}
+
+.relic-item-label2 {
   flex: 1;
+}
+.relic-item-label3 {
+  flex: 1;
+}
+
+/* Ensure that the name has enough space and the price and volume are not squished */
+.relic-item-drop-name {
+  flex: 3; /* Give the name more space */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.relic-item-drop-platinum {
-  flex-shrink: 0; /* Prevents the platinum price from shrinking */
-  margin-left: 10px; /* Adds some space between the name and price */
+.relic-item-drop-platinum, .relic-item-drop-volume {
+  flex: 1; /* Ensure price and volume take up equal space */
+  flex-shrink: 0;
+  text-align: center; /* Align the text to the right */
+  padding-left: 5px;
 }
-
 
 .carousel-container {
   display: flex;
@@ -165,7 +180,7 @@ input[type="checkbox"] {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: #888 #e0e0e0;
-  padding: 10px 0;
+  /* padding: 10px 0; */
   width: 100%;
 }
 

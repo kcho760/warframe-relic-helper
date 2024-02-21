@@ -55,22 +55,6 @@ const RelicList = ({ filters }) => {
   
     fetchActiveFissures();
   }, []);
-  
-  // const applyFilters = (relicsData, filters, activeFissures) => {
-  //   const missionTypes = [...filters.missionType, ...filters.endlessMission];
-  //   const matchingFissures = activeFissures.filter(fissure =>
-  //     (missionTypes.length === 0 || missionTypes.includes(fissure.missionType)) &&
-  //     (filters.tier.length === 0 || filters.tier.includes(fissure.tier)) &&
-  //     (filters.steelPath === 'both' || fissure.isHard.toString() === filters.steelPath)
-  //   );
-
-  //   if (matchingFissures.length === 0) {
-  //     return [];
-  //   }
-
-  //   const matchingTiers = new Set(matchingFissures.map(fissure => fissure.tier));
-  //   return relicsData.filter(relic => matchingTiers.has(relic.Tier));
-  // };
 
   const applyFilters = (relicsData, filters, activeFissures) => {
     // Debug object to store reasons for relic inclusion
@@ -152,11 +136,18 @@ const RelicList = ({ filters }) => {
               )}
             </div>
             <div className="relic-item-back">
+              {/* Label Row */}
+              <div className="relic-item-labels">
+                <span className="relic-item-label1">Item</span>
+                <span className="relic-item-label2">Price</span>
+                <span className="relic-item-label3">7-day Avg Vol</span>
+              </div>
               {/* Back content (e.g., Drops) */}
               {relic.Drops.map((drop, index) => (
                 <div key={index} className="relic-item-drop">
                   <span className="relic-item-drop-name">{`${drop.Item} ${drop.Part}`}</span>
                   <span className="relic-item-drop-platinum">{drop.MarketData ? `${drop.MarketData.platinumPrice}p` : 'N/A'}</span>
+                  <span className="relic-item-drop-volume">{drop.MarketData ? `${drop.MarketData['7DayVolumeAverage']}` : 'N/A'}</span>
                 </div>
               ))}
             </div>

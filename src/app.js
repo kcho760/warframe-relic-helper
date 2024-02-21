@@ -53,6 +53,15 @@ cron.schedule('0 * * * *', async () => {
   }
 });
 
+cron.schedule('0 0 * * *', async () => {
+  try {
+    const response = await axios.post('https://warframe-relic-app.onrender.com/api/items/update-relics-7-day-volume');
+    console.log('Relics 7-day volume update response:', response.data);
+  } catch (error) {
+    console.error('Error updating relics 7-day volume:', error);
+  }
+});
+
 // Serve your routes
 app.use('/api/relics', relicRoutes);
 app.use('/api/items', itemsRoutes);
