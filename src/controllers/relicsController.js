@@ -52,7 +52,7 @@ const getRelicDataFromFirestore = async (req, res) => {
 };
 
 // Function to calculate the TEV for a single relic
-const calculateTEV = (drops, refinementLevel) => {
+const calculateTEVWithVolume = (drops, refinementLevel) => {
   // Drop chances based on refinement level from the provided table
   const dropChancesByRefinement = {
     Intact: { "Common": 76 / 100, "Uncommon": 22 / 100, "Rare": 2 / 100 },
@@ -63,17 +63,18 @@ const calculateTEV = (drops, refinementLevel) => {
 
   const dropChances = dropChancesByRefinement[refinementLevel];
 
-  // Calculate the TEV using the market data and the drop chances for the specified refinement level
+  // Calculate the TEV using the market data, drop chances, and volume for the specified refinement level
   const tev = drops.reduce((acc, drop) => {
     const chance = dropChances[drop.Rarity];
     const price = drop.MarketData?.platinumPrice || 0;
-    return acc + (chance * price);
+    const volume = drop.MarketData?.['7DayVolumeAverage'] || 0;
+    return acc + (chance * price * volume);
   }, 0);
 
   return Number(tev.toFixed(2));
 };
-  
-// Function to update the TEV for each relic in Firestore for each refinement level
+
+// Function to update the TEV for each relic in Firestore for each refinement level with volume
 const updateTEVForAllRelicsByRefinement = async () => {
   const db = admin.firestore();
   const relicsRef = db.collection('relics');
@@ -87,9 +88,9 @@ const updateTEVForAllRelicsByRefinement = async () => {
       const relicData = doc.data();
       const tevByRefinement = {};
 
-      // Calculate TEV for each refinement level and store it in an object
+      // Calculate TEV for each refinement level with volume and store it in an object
       refinementLevels.forEach(level => {
-        tevByRefinement[`${level}TEV`] = calculateTEV(relicData.Drops, level);
+        tevByRefinement[`${level}TEV`] = calculateTEVWithVolume(relicData.Drops, level);
       });
 
       // Update the document with the TEV for each refinement level
@@ -98,9 +99,9 @@ const updateTEVForAllRelicsByRefinement = async () => {
 
     // Commit the batch update
     await batch.commit();
-    console.log('TEV updated for all relics at each refinement level.');
+    console.log('TEV with volume updated for all relics at each refinement level.');
   } catch (error) {
-    console.error('Error updating TEV for relics at each refinement level:', error);
+    console.error('Error updating TEV with volume for relics at each refinement level:', error);
   }
 };
 
