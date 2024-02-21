@@ -10,42 +10,29 @@ const RelicList = ({ filters }) => {
   const [activeFissures, setActiveFissures] = useState([]);
   const [flippedCardIds, setFlippedCardIds] = useState(new Set());
 
-  useEffect(() => {
-    const fetchRelics = async () => {
-      setLoading(true);
-      console.log('Current filters:', filters);
-      try {
-        const querySnapshot = await getDocs(collection(db, 'relics'));
-        let relicsData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+  relicsData.sort((a, b) => {
+    // Check if filters.refinementLevel is an array and has no selected refinement level
+    const isRefinementLevelArrayAndEmpty = Array.isArray(filters.refinementLevel) && filters.refinementLevel.length === 0;
   
-        console.log('Initial fetched data:', relicsData);
+    // Determine the property to use for sorting
+    const refinementProperty = isRefinementLevelArrayAndEmpty ? 'IntactTEV' : `${filters.refinementLevel}TEV`;
   
-        relicsData = applyFilters(relicsData, filters, activeFissures);
-        console.log('Data after filters applied:', relicsData);
+    console.log(`Sorting property: ${refinementProperty}`);
   
-        // Sort based on the selected refinement level TEV, defaulting to IntactTEV
-        relicsData.sort((a, b) => {
-          const aTEV = a[`${filters.refinementLevel}TEV`] || a['IntactTEV'];
-          const bTEV = b[`${filters.refinementLevel}TEV`] || b['IntactTEV'];
-          console.log(`Comparing ${a.id}: ${aTEV} to ${b.id}: ${bTEV}`); // Log the values being compared
-          return bTEV - aTEV;
-        });
+    // Extract TEV values for comparison, ensuring to handle undefined values and convert to numbers
+    const aValue = a[refinementProperty] !== undefined ? Number(a[refinementProperty]) : 0;
+    const bValue = b[refinementProperty] !== undefined ? Number(b[refinementProperty]) : 0;
   
-        console.log('Data after sorting:', relicsData);
-        setRelics(relicsData);
-      } catch (err) {
-        console.error('Failed to fetch relics:', err);
-        setError('Failed to fetch relics');
-      } finally {
-        setLoading(false);
-      }
-    };
+    // Log the values being compared for sorting
+    console.log(`Comparing ${a.id} TEV: ${aValue} to ${b.id} TEV: ${bValue}`);
   
-    fetchRelics();
-  }, [filters, activeFissures]);
+    // Perform the sort
+    return bValue - aValue;
+  });
+  
+  // After sorting, log the sorted data to verify
+  console.log('Data after sorting by TEV:', relicsData.map(relic => ({ id: relic.id, TEV: relic[refinementProperty] })));
+  
   
   useEffect(() => {
     const fetchActiveFissures = async () => {
