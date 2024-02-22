@@ -214,6 +214,9 @@ function Home() {
       <footer className="home-footer">
         <div>Thanks to Warframe.Market, snekwWikiService, and Warframe Community Devs for API's and answer dumb questions on discord!</div>
         <div>Suggestions and bugs can be sent to kcho760@gmail.com. Use this tool at your own discretion. </div>
+        <div>
+          <a href="https://github.com/kcho760/warframe-relic-helper">Github</a>
+        </div>
       </footer>
     </div>
   );

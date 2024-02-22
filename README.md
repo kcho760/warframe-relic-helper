@@ -33,13 +33,8 @@ To contribute:
 4. Push to the branch (`git push origin feature/AmazingFeature`).
 5. Open a pull request.
 
-## License
-Distributed under the MIT License. See `LICENSE` for more information.
-
 ## Contact
 Kevin Cho - kcho760@gmail.com
-
-Project Link: [https://github.com/kcho760/warframe-relic-helper](https://github.com/kcho760/warframe-relic-helper)
 
 ## Acknowledgments
 - [Warframe Market](https://warframe.market/) for providing market data APIs.
