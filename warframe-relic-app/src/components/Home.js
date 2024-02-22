@@ -135,24 +135,16 @@ function Home() {
           </div>
         </div>
         <div>
-          <div>This tool is meant to be used to find what relics to run for maximum potential profit while seeing what fissures are available currently.</div>
-          <div>Choose what type of missions you want to run as well as settings for steel path, refinement levels of relics(optional, default is Intact), and types of relics(optional)</div>
-          <div>Relics are sorted by TEV.</div>
-          <div>TEV=∑(Chance 
-              i
-              ​
-              ×Price 
-              i
-              ​
-              ×Volume 
-              i
-              ​
-              )</div>
-          <div>Volume is put there for you to make sure your items will move quickly.</div>
-          <div>Market Prices and volume is updated on the hour.</div>
-          <div>Relics are sorted by highest refinement chosen.</div>
-          <div>Currently, void storms are removed.</div>
-        </div>
+  This tool is meant to be used to find what relics to run for maximum potential profit while seeing what fissures are available currently.<br /><br />
+  Choose what type of missions you want to run as well as settings for steel path, refinement levels of relics(optional, default is Intact), and types of relics(optional)<br /><br />
+  Relics are sorted by TEV.<br />
+  TEV=∑(Chance ×Price ×Volume)<br /><br />
+  Volume is put there for you to make sure your items will move quickly.<br />
+  Market Prices and volume is updated on the hour.<br />
+  Relics are sorted by highest refinement chosen.<br />
+  Currently, void storms are removed.
+</div>
+
         <div className="bottom-half-right">
           <div className="checkbox-group-container">
             {/* Steel Path Radio Buttons */}
@@ -217,9 +209,12 @@ function Home() {
         </div>
       </div>
       <ActiveFissures filters={combinedFilters}/>
+      <footer className="home-footer">
+        <div>Thanks to Warframe.Market, snekwWikiService, and Warframe Community Devs for API's and answer dumb questions on discord!</div>
+        <div>Suggestions and bugs can be sent to kcho760@gmail.com. Use this tool at your own discretion. </div>
+      </footer>
     </div>
   );
-  
 }
 
 export default Home;
