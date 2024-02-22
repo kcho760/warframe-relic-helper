@@ -141,8 +141,10 @@ function Home() {
   TEV=∑(Chance ×Price ×Volume)<br /><br />
   Volume is put there for you to make sure your items will move quickly.<br />
   Market Prices and volume is updated on the hour.<br />
+  Prices are from players online and in game.<br />
   Relics are sorted by highest refinement chosen.<br />
-  Currently, void storms are removed.
+  Currently, void storms are removed.<br />
+  Relics included are only non-vaulted relics to reduce how much info needs to be saved.
 </div>
 
         <div className="bottom-half-right">
