@@ -135,14 +135,14 @@ function Home() {
           </div>
         </div>
         <div>
-  This tool is meant to be used to find what relics to run for maximum potential profit while seeing what fissures are available currently.<br /><br />
+  This tool is meant to be used to find what relics to run for maximum potential profit while seeing what fissures are available currently.<br />Please use as a general guide.<br />
   Choose what type of missions you want to run as well as settings for steel path, refinement levels of relics(optional, default is Intact), and types of relics(optional)<br /><br />
   Relics are sorted by TEV.<br />
   TEV=∑(Chance ×Price ×Volume)<br /><br />
   Volume is put there for you to make sure your items will move quickly.<br />
   Market Prices and volume is updated on the hour.<br />
   Prices are from players online and in game.<br />
-  Relics are sorted by highest refinement chosen.<br />
+  Relics are sorted by the last refinement selected.<br />
   Currently, void storms are removed.<br />
   Relics included are only non-vaulted relics to reduce how much info needs to be saved.
 </div>
