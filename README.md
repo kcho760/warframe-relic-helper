@@ -6,7 +6,7 @@ Warframe Relic Helper(WRH) is a web application designed to help Warframe player
 Choosing a relic was too overwhelming when there were so many choices. I created this out of a need to not think and just figure out which I should choose. I also needed to have a quick reference of prices and volume.
 
 Alecaframe does a MUCH better job. Use that for sure. This is just a quick reference or if you don't have or want to use Overwolf.
-WRH also helps you choose based on what types of mission you like. I can't stand spy missions and prefer endless missions so its an easy way to see whats available.
+WRH also helps you choose based on what types of mission you like. For example, I can't stand spy missions and prefer endless missions so its an easy way to see whats available.
 
 ## Features
 - **Fissure Mission Filtering**: Users can filter available fissure missions based on mission type, including both normal and endless missions.
