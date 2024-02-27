@@ -54,6 +54,7 @@ async function fetchAverageVolumeLast7Days(itemUrlName) {
     return averageVolume;
   } catch (error) {
     console.error("There was an error fetching the average volume:", error);
+    console.error("itemName:", itemUrlName);
   }
 }
 
