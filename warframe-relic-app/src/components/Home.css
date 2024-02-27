@@ -16,7 +16,7 @@
 
 .top-half {
   height: 40vh;
-  background-color: #d7d7d7;
+  background: linear-gradient(to right, #cbcbcb 0%, #9fc5f7 100%);
 }
 
 .bottom-half {
@@ -166,8 +166,8 @@ input[type="checkbox"] {
   display: flex;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: #888 #e0e0e0;
+  scrollbar-width:auto;
+  scrollbar-color: #252222 #c6cace;
   /* padding: 10px 0; */
   width: 100%;
   height: 100%;
