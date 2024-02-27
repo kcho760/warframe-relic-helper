@@ -11,8 +11,13 @@ const limiter = new Bottleneck({
     minTime: 334 // Slightly higher than 333.33 to account for any processing time
 });
 
+// const formatItemNameForUrl = (itemName, itemPart) => {
+//     return `${itemName.toLowerCase()}_${itemPart.toLowerCase()}`.replace(/ /g, '_');
+// };
 const formatItemNameForUrl = (itemName, itemPart) => {
-    return `${itemName.toLowerCase()}_${itemPart.toLowerCase()}`.replace(/ /g, '_');
+    return `${itemName.toLowerCase()}_${itemPart.toLowerCase()}`
+        .replace(/ /g, '_')  // Replace spaces with underscores
+        .replace(/&/g, '%26'); // Replace ampersands with their URL-encoded counterpart
 };
 
 const updateDropWithMarketData = async (drop) => {
