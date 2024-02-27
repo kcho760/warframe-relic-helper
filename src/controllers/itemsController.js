@@ -17,7 +17,7 @@ const limiter = new Bottleneck({
 const formatItemNameForUrl = (itemName, itemPart) => {
     return `${itemName.toLowerCase()}_${itemPart.toLowerCase()}`
         .replace(/ /g, '_')  // Replace spaces with underscores
-        .replace(/&/g, '%26'); // Replace ampersands with their URL-encoded counterpart
+        .replace(/&/g, 'and'); // Replace ampersands with and
 };
 
 const updateDropWithMarketData = async (drop) => {

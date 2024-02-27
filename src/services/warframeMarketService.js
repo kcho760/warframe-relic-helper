@@ -20,7 +20,7 @@ const fetchTopOrders = async (itemUrlName) => {
     };
 
     // Log to verify the filtered result
-    console.log('Filtered ingame sell orders:', filteredResponseData);
+    // console.log('Filtered ingame sell orders:', filteredResponseData);
     return filteredResponseData;
 
   } catch (error) {
