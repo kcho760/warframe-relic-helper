@@ -3,26 +3,15 @@
   text-align: center;
 }
 
-
-.bottom-half-left, .bottom-half-right {
-  display: flex;
-  flex-direction: column;
-  width: 50%; /* Adjust this value if you want one side to be wider than the other */
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-}
-
-
 .top-half {
-  height: 40vh;
+  height: 40vh; /* Adjust height or use min-height for smaller devices */
   background: linear-gradient(to right, #cbcbcb 0%, #9fc5f7 100%);
 }
 
 .bottom-half {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-wrap: wrap; /* Allows child elements to wrap as needed */
+  justify-content: space-around; /* Adjusts spacing for varying screen sizes */
   padding: 20px;
   background-color: #e0e0e0;
 }
@@ -41,8 +30,6 @@
   border-radius: 5px;
 }
 
-
-
 input[type="checkbox"] {
   margin-right: 10px;
 }
@@ -54,14 +41,14 @@ input[type="checkbox"] {
 .relic-item {
   perspective: 1000px;
   flex: 0 0 auto;
-  width: 400px;
+  width: 400px; /* Set a max-width for mobile screens */
   height: 300px;
   margin: 10px;
   text-align: center;
   position: relative;
   border-radius: 5px;
   transition: transform 0.3s ease-in-out;
-  box-sizing: border-box; /* Include padding and border in the width and height */
+  box-sizing: border-box;
 }
 
 .relic-item:hover {
@@ -71,13 +58,12 @@ input[type="checkbox"] {
 .fissure-card {
   perspective: 1000px;
   flex: 0 0 auto;
-  width: 200px;
-  height: 230px; /* Adjust based on your content */
-  /* margin: 10px; */
+  width: 200px; /* Set a max-width for mobile screens */
+  height: 230px;
   text-align: center;
   position: relative;
   border-radius: 5px;
-  border: #000 1px solid;
+  border: 1px solid #000;
 }
 
 .relic-item-flipper {
@@ -187,4 +173,40 @@ input[type="checkbox"] {
 
 .carousel-container::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+@media (max-width: 768px) {
+  .bottom-half-left, .bottom-half-right {
+    width: 100%; /* Full width on small screens */
+    margin: 0;
+  }
+  
+  .relic-item, .fissure-card {
+    width: calc(50% - 20px); /* Two items per row on small screens, accounting for margin */
+    height: auto; /* Adjust height as necessary */
+  }
+  
+  .carousel-container {
+    padding: 0 10px;
+  }
+  
+  .top-half {
+    height: 30vh; /* Adjust top-half height on small screens */
+  }
+  
+  .relic-item {
+    width: calc(100% - 20px); /* Full width on very small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .relic-item, .fissure-card {
+    width: calc(100% - 20px); /* Full width on extra small screens */
+  }
+  
+  .bottom-half {
+    padding: 10px; /* Less padding on extra small screens */
+  }
+  
+  /* Additional mobile-specific styles if necessary */
 }
